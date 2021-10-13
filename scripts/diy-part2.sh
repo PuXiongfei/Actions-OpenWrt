@@ -27,3 +27,6 @@ git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config.git packa
 
 echo '默认使用argon主题'
 sed -i "s/bootstrap/argon/g" feeds/luci/modules/luci-base/root/etc/config/luci
+
+echo '新增OpenClash'
+git clone --depth=1 https://github.com/vernesong/OpenClash.git package/lean/luci-app-openclash
