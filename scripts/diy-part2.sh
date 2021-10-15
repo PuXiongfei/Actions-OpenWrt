@@ -20,13 +20,15 @@ sed -i "s/OpenWrt/$DEVICE_NAME/g" package/base-files/files/bin/config_generate
 echo "修改ssid为$DEVICE_NAME"
 sed -i "s/OpenWrt/$DEVICE_NAME/g" package/kernel/mac80211/files/lib/wifi/mac80211.sh
 
+echo '默认使用argon主题'
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
+
 echo '替换argon主题'
 rm -rf package/lean/luci-theme-argon
 git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/lean/luci-theme-argon
+rm -rf package/lean/luci-app-argon-config
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config.git package/lean/luci-app-argon-config
 
-echo '默认使用argon主题'
-sed -i "s/bootstrap/argon/g" feeds/luci/modules/luci-base/root/etc/config/luci
-
 echo '新增OpenClash'
+rm -rf package/lean/luci-app-openclash
 git clone --depth=1 https://github.com/vernesong/OpenClash.git package/lean/luci-app-openclash
