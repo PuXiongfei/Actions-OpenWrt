@@ -18,3 +18,6 @@
 
 echo 'feeds.conf.default 增加 passwall'
 echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
+
+echo 'feeds.conf.default 增加 OpenClash'
+echo 'src-git OpenClash https://github.com/vernesong/OpenClash' >>feeds.conf.default

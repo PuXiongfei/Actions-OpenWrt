@@ -14,11 +14,11 @@
 echo '修改默认IP为192.168.26.26'
 sed -i 's/192.168.1.1/192.168.26.26/g' package/base-files/files/bin/config_generate
 
-echo "修改hostname为$DEVICE_NAME"
-sed -i "s/OpenWrt/$DEVICE_NAME/g" package/base-files/files/bin/config_generate
+echo '修改hostname为${DEVICE_NAME}'
+sed -i 's/OpenWrt/$DEVICE_NAME/g' package/base-files/files/bin/config_generate
 
-echo "修改ssid为$DEVICE_NAME"
-sed -i "s/OpenWrt/$DEVICE_NAME/g" package/kernel/mac80211/files/lib/wifi/mac80211.sh
+echo '修改ssid为${DEVICE_NAME}'
+sed -i 's/OpenWrt/$DEVICE_NAME/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh
 
 echo '默认使用argon主题'
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
@@ -29,6 +29,23 @@ git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git p
 rm -rf package/lean/luci-app-argon-config
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config.git package/lean/luci-app-argon-config
 
-echo '新增OpenClash'
-rm -rf package/lean/luci-app-openclash
-git clone --depth=1 https://github.com/vernesong/OpenClash.git package/lean/luci-app-openclash
+echo '修改DEFAULT_PACKAGES'
+sed -i 's/luci-app-autoreboot//g;s/luci-app-unblockmusic//g;s/luci-app-ramfree//g;s/luci-app-accesscontrol//g' include/target.mk
+sed -i '/DEFAULT_PACKAGES.router/a\ automount ipv6helper ddns-scripts_cloudflare.com-v4 luci-app-argon-config luci-app-aria2 luci-app-diskman luci-app-hd-idle luci-app-pushbot luci-app-samba4 luci-app-udpxy luci-app-zerotier \\' include/target.mk
+
+if [[ $DEVICE_NAME=D2 ]]; then
+    echo '修改D2的DEVICE_PACKAGES'
+    sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
+    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g;s/\\/luci-app-passwall luci-app-passwall_INCLUDE_Haproxy luci-app-passwall_INCLUDE_Xray \\/g}' target/linux/ramips/image/mt7621.mk
+    sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
+elif [[ $DEVICE_NAME=K3 ]]; then
+    echo '修改K3的DEVICE_PACKAGES'
+    sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
+    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-rclone luci-app-openclash luci-app-passwall/g}' target/linux/bcm53xx/image/Makefile
+    sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
+elif [[ $DEVICE_NAME=R3G ]]; then
+    echo '修改R3G的DEVICE_PACKAGES'
+    sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
+    sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-rclone luci-app-openclash luci-app-passwall luci-app-passwall_INCLUDE_Haproxy luci-app-passwall_INCLUDE_V2ray luci-app-passwall_INCLUDE_V2ray_Plugin luci-app-passwall_INCLUDE_Xray \\/g}' target/linux/ramips/image/mt7621.mk
+    sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
+fi
