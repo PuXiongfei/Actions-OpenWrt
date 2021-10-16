@@ -55,9 +55,16 @@ if [ "$DEVICE_NAME" = "D2" ]; then
     sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
 fi
 if [ "$DEVICE_NAME" = "K3" ]; then
+    echo "替换k3screenctrl"
+    rm -rf package/lean/k3screenctrl
+    git clone --depth=1 https://github.com/lwz322/k3screenctrl package/lean/k3screenctrl
+    rm -rf package/lean/luci-app-k3screenctrl
+    git clone --depth=1 https://github.com/lwz322/luci-app-k3screenctrl package/lean/luci-app-k3screenctrl
+    rm -rf package/lean/k3screenctrl_build
+    git clone --depth=1 https://github.com/lwz322/k3screenctrl_build package/lean/k3screenctrl_build
     echo "修改$DEVICE_NAME的DEVICE_PACKAGES"
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
-    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-rclone luci-app-openclash luci-app-passwall/g}' target/linux/bcm53xx/image/Makefile
+    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& luci-app-k3screenctrl autocore-arm luci-app-rclone luci-app-openclash luci-app-passwall/g}' target/linux/bcm53xx/image/Makefile
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
     echo "修改passwall默认值"
     sed -n '/"Include V2ray"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
@@ -69,6 +76,8 @@ if [ "$DEVICE_NAME" = "K3" ]; then
     sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
     sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
     sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
+    echo "修改$DEVICE_NAME的TARGET_DEVICES只留下K3"
+    sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm-k3|TARGET_DEVICES += phicomm-k3|' target/linux/bcm53xx/image/Makefile
 fi
 if [ "$DEVICE_NAME" = "R3G" ]; then
     echo "修改$DEVICE_NAME的DEVICE_PACKAGES"
