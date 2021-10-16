@@ -35,7 +35,7 @@ sed -i '/DEFAULT_PACKAGES.router/,/^ifneq/{s/luci-app-autoreboot//g;s/luci-app-u
 sed -i '/DEFAULT_PACKAGES.router/a\ automount ipv6helper ddns-scripts_cloudflare.com-v4 luci-app-argon-config luci-app-aria2 luci-app-diskman luci-app-hd-idle luci-app-pushbot luci-app-samba4 luci-app-udpxy luci-app-zerotier \\' include/target.mk
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 
-if [[ $DEVICE_NAME=D2 ]]; then
+if [ "$DEVICE_NAME" = "D2" ]; then
     echo "修改$DEVICE_NAME的DEVICE_PACKAGES"
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
     sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g;s/\\/luci-app-passwall \\/g}' target/linux/ramips/image/mt7621.mk
@@ -53,7 +53,8 @@ if [[ $DEVICE_NAME=D2 ]]; then
     sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
     sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
     sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
-elif [[ $DEVICE_NAME=K3 ]]; then
+fi
+if [ "$DEVICE_NAME" = "K3" ]; then
     echo "修改$DEVICE_NAME的DEVICE_PACKAGES"
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
     sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-rclone luci-app-openclash luci-app-passwall/g}' target/linux/bcm53xx/image/Makefile
@@ -68,7 +69,8 @@ elif [[ $DEVICE_NAME=K3 ]]; then
     sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
     sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
     sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
-elif [[ $DEVICE_NAME=R3G ]]; then
+fi
+if [ "$DEVICE_NAME" = "R3G" ]; then
     echo "修改$DEVICE_NAME的DEVICE_PACKAGES"
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
     sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-rclone luci-app-openclash luci-app-passwall \\/g}' target/linux/ramips/image/mt7621.mk
