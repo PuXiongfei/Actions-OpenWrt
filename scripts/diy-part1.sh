@@ -16,12 +16,12 @@
 # Add a feed source
 #echo 'src-git helloworld https://github.com/fw876/helloworld' >>feeds.conf.default
 
-echo '当前配置文件为$CONFIG_FILE'
-echo 'CONFIG_FILE_DEVICE=$(basename $CONFIG_FILE .config)' >>$GITHUB_ENV
-echo '配置文件设备为$CONFIG_FILE_DEVICE'
+echo "当前配置文件为$CONFIG_FILE"
+echo "CONFIG_FILE_DEVICE=$(basename $CONFIG_FILE .config)" >>$GITHUB_ENV
+echo "配置文件设备为$CONFIG_FILE_DEVICE"
 
-echo 'feeds.conf.default 增加 passwall'
-echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
+echo "feeds.conf.default 增加 passwall"
+echo "src-git passwall https://github.com/xiaorouji/openwrt-passwall" >>feeds.conf.default
 
-echo 'feeds.conf.default 增加 OpenClash'
-echo 'src-git OpenClash https://github.com/vernesong/OpenClash' >>feeds.conf.default
+echo "feeds.conf.default 增加 OpenClash"
+echo "src-git OpenClash https://github.com/vernesong/OpenClash" >>feeds.conf.default
