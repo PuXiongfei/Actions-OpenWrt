@@ -106,6 +106,7 @@ if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
     sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
     echo "修改$CONFIG_FILE_DEVICE的DTS"
-    [ -e ../config/R3G_dts.config ] && cat ../config/R3G_dts.config && git apply ../config/R3G_dts.config
+    [ -e $GITHUB_WORKSPACE/config/R3G_dts.config ] && cat $GITHUB_WORKSPACE/config/R3G_dts.config && git apply $GITHUB_WORKSPACE/config/R3G_dts.config
+    echo "修改后的DTS"
     cat target/linux/ramips/dts/mt7621_xiaomi_mi-router-3g.dts
 fi
