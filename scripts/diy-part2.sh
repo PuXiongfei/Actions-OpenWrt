@@ -76,6 +76,10 @@ if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
     echo "修改Makefile只编译K3"
     sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
+    echo "修改02_network"
+    sed -n '/phicomm,k3)/,/;;/p' target/linux/bcm53xx/base-files/etc/board.d/02_network
+    sed -i '/phicomm,k3)/,/;;/{s/"0:lan" "1:lan"/"0:lan:1" "1:lan:0"/g}' target/linux/bcm53xx/base-files/etc/board.d/02_network
+    sed -n '/phicomm,k3)/,/;;/p' target/linux/bcm53xx/base-files/etc/board.d/02_network
     echo "修改passwall默认值"
     sed -n '/"Include V2ray"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
     sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
