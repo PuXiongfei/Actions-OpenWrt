@@ -80,16 +80,6 @@ if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     sed -n '/phicomm,k3)/,/;;/p' target/linux/bcm53xx/base-files/etc/board.d/02_network
     sed -i '/phicomm,k3)/,/;;/{s/"0:lan" "1:lan"/"0:lan:1" "1:lan:0"/g}' target/linux/bcm53xx/base-files/etc/board.d/02_network
     sed -n '/phicomm,k3)/,/;;/p' target/linux/bcm53xx/base-files/etc/board.d/02_network
-    echo "修改passwall默认值"
-    sed -n '/"Include V2ray"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include V2ray"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include V2ray-Plugin/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include V2ray-Plugin/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
 fi
 if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
