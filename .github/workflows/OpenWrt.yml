@@ -78,7 +78,7 @@ jobs:
       - name: Checkout self
         uses: actions/checkout@v2
 
-      - name: Checkout OpenWrt Repository
+      - name: Checkout repository
         uses: actions/checkout@v2
         with:
           path: openwrt
@@ -232,7 +232,7 @@ jobs:
       - name: Checkout self
         uses: actions/checkout@v2
 
-      - name: Checkout OpenWrt Repository
+      - name: Checkout repository
         uses: actions/checkout@v2
         with:
           path: openwrt
@@ -386,7 +386,7 @@ jobs:
       - name: Checkout self
         uses: actions/checkout@v2
 
-      - name: Checkout OpenWrt Repository
+      - name: Checkout repository
         uses: actions/checkout@v2
         with:
           path: openwrt
