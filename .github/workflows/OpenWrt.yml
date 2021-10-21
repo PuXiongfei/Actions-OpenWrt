@@ -78,7 +78,7 @@ jobs:
       - name: Checkout self
         uses: actions/checkout@v2
 
-      - name: Checkout repository
+      - name: Checkout OpenWrt Repository
         uses: actions/checkout@v2
         with:
           path: openwrt
@@ -91,7 +91,7 @@ jobs:
           df -hT
           sudo timedatectl set-timezone "$TZ"
           sudo -E apt-get -qq update
-          sudo -E apt-get -qq install $(cat $GITHUB_WORKSPACE/config/depends-ubuntu.config)
+          sudo -E apt-get -qq install $(cat config/depends-ubuntu.config)
 
       - name: Load custom feeds
         run: |
@@ -232,7 +232,7 @@ jobs:
       - name: Checkout self
         uses: actions/checkout@v2
 
-      - name: Checkout repository
+      - name: Checkout OpenWrt Repository
         uses: actions/checkout@v2
         with:
           path: openwrt
@@ -245,7 +245,7 @@ jobs:
           df -hT
           sudo timedatectl set-timezone "$TZ"
           sudo -E apt-get -qq update
-          sudo -E apt-get -qq install $(cat $GITHUB_WORKSPACE/config/depends-ubuntu.config)
+          sudo -E apt-get -qq install $(cat config/depends-ubuntu.config)
 
       - name: Load custom feeds
         run: |
@@ -386,7 +386,7 @@ jobs:
       - name: Checkout self
         uses: actions/checkout@v2
 
-      - name: Checkout repository
+      - name: Checkout OpenWrt Repository
         uses: actions/checkout@v2
         with:
           path: openwrt
