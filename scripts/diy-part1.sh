@@ -18,7 +18,6 @@
 
 echo "当前配置文件为$CONFIG_FILE"
 echo "CONFIG_FILE_DEVICE=$(basename $CONFIG_FILE .config)" >>$GITHUB_ENV
-echo "配置文件设备为$CONFIG_FILE_DEVICE"
 
 echo "feeds.conf.default 增加 passwall"
 echo "src-git passwall https://github.com/xiaorouji/openwrt-passwall" >>feeds.conf.default
