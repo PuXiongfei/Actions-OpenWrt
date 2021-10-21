@@ -12,6 +12,7 @@ name: Build OpenWrt
 
 on:
   repository_dispatch:
+    types: [OpenWrt]
   workflow_dispatch:
     inputs:
       repository:
@@ -25,7 +26,7 @@ on:
       config:
         description: "build config"
         required: false
-        default: "K3,R3G"
+        default: "D2,K3,R3G"
 
 env:
   FEEDS_CONF: feeds.conf.default
@@ -57,7 +58,7 @@ jobs:
       - name: Checkout self
         uses: actions/checkout@v2
 
-      - name: Checkout OpenWrt Repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
         with:
           path: openwrt
