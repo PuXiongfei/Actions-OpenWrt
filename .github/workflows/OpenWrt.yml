@@ -27,10 +27,6 @@ on:
         description: "build device"
         required: true
         default: "D2,K3,R3G"
-      feedsConfig:
-        description: "feeds config"
-        required: true
-        default: "feeds.conf.default"
       beforeFeeds:
         description: "before update feeds scripts"
         required: true
@@ -99,7 +95,7 @@ jobs:
 
       - name: Load custom feeds
         run: |
-          [ -e ${{ github.event.inputs.feedsConfig }} ] && mv ${{ github.event.inputs.feedsConfig }} openwrt/feeds.conf.default
+          [ -e feeds.conf.default ] && mv feeds.conf.default openwrt/feeds.conf.default
           chmod +x ${{ github.event.inputs.beforeFeeds }}
           cd openwrt
           $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
@@ -253,7 +249,7 @@ jobs:
 
       - name: Load custom feeds
         run: |
-          [ -e ${{ github.event.inputs.feedsConfig }} ] && mv ${{ github.event.inputs.feedsConfig }} openwrt/feeds.conf.default
+          [ -e feeds.conf.default ] && mv feeds.conf.default openwrt/feeds.conf.default
           chmod +x ${{ github.event.inputs.beforeFeeds }}
           cd openwrt
           $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
@@ -403,11 +399,11 @@ jobs:
           df -hT
           sudo timedatectl set-timezone "$TZ"
           sudo -E apt-get -qq update
-          sudo -E apt-get -qq install $(cat $GITHUB_WORKSPACE/config/depends-ubuntu.config)
+          sudo -E apt-get -qq install $(cat config/depends-ubuntu.config)
 
       - name: Load custom feeds
         run: |
-          [ -e ${{ github.event.inputs.feedsConfig }} ] && mv ${{ github.event.inputs.feedsConfig }} openwrt/feeds.conf.default
+          [ -e feeds.conf.default ] && mv feeds.conf.default openwrt/feeds.conf.default
           chmod +x ${{ github.event.inputs.beforeFeeds }}
           cd openwrt
           $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
