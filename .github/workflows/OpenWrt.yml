@@ -24,19 +24,43 @@ on:
         required: true
         default: "master"
       config:
-        description: "build config"
-        required: false
+        description: "build device"
+        required: true
         default: "D2,K3,R3G"
+      feedsConfig:
+        description: "feeds config"
+        required: true
+        default: "feeds.conf.default"
+      beforeFeeds:
+        description: "before update feeds scripts"
+        required: true
+        default: "scripts/diy-part1.sh"
+      afterFeeds:
+        description: "after update feeds scripts"
+        required: true
+        default: "scripts/diy-part2.sh"
+      uploadBinDir:
+        description: "upload bin dir"
+        required: true
+        default: "false"
+      uploadFirmware:
+        description: "upload firmware"
+        required: true
+        default: "true"
+      uploadCowtransfer:
+        description: "upload cowtransfer"
+        required: true
+        default: "false"
+      uploadWetransfer:
+        description: "upload wetransfer"
+        required: true
+        default: "false"
+      uploadRelease:
+        description: "upload release"
+        required: true
+        default: "false"
 
 env:
-  FEEDS_CONF: feeds.conf.default
-  DIY_P1_SH: scripts/diy-part1.sh
-  DIY_P2_SH: scripts/diy-part2.sh
-  UPLOAD_BIN_DIR: false
-  UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: false
-  UPLOAD_WETRANSFER: false
-  UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
 
 jobs:
@@ -58,7 +82,7 @@ jobs:
       - name: Checkout self
         uses: actions/checkout@v2
 
-      - name: Checkout Repository
+      - name: Checkout OpenWrt Repository
         uses: actions/checkout@v2
         with:
           path: openwrt
@@ -75,10 +99,10 @@ jobs:
 
       - name: Load custom feeds
         run: |
-          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x $DIY_P1_SH
+          [ -e ${{ github.event.inputs.feedsConfig }} ] && mv ${{ github.event.inputs.feedsConfig }} openwrt/feeds.conf.default
+          chmod +x ${{ github.event.inputs.beforeFeeds }}
           cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P1_SH
+          $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -90,9 +114,9 @@ jobs:
         run: |
           [ -e files ] && mv files openwrt/files
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x $DIY_P2_SH
+          chmod +x ${{ github.event.inputs.afterFeeds }}
           cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P2_SH
+          $GITHUB_WORKSPACE/${{ github.event.inputs.afterFeeds }}
 
       - name: Download package
         id: package
@@ -120,14 +144,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@main
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+        if: steps.compile.outputs.status == 'success' && github.event.inputs.uploadBinDir == 'true'
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+        if: github.event.inputs.uploadFirmware == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -143,7 +167,7 @@ jobs:
 
       - name: Upload firmware to cowtransfer
         id: cowtransfer
-        if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
+        if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadCowtransfer == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -152,7 +176,7 @@ jobs:
 
       - name: Upload firmware to WeTransfer
         id: wetransfer
-        if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
+        if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadWetransfer == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -161,12 +185,12 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: github.event.inputs.uploadRelease == 'true' && !cancelled()
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           touch release.txt
-          [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
-          [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+          [ ${{ github.event.inputs.uploadCowtransfer }} = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
+          [ ${{ github.event.inputs.uploadWetransfer }} = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
           echo "::set-output name=status::success"
 
       - name: Upload firmware to release
@@ -187,7 +211,7 @@ jobs:
 
       - name: Remove old Releases
         uses: dev-drprasad/delete-older-releases@v0.2.0
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: github.event.inputs.uploadRelease == 'true' && !cancelled()
         with:
           keep_latest: 3
           delete_tags: true
@@ -229,10 +253,10 @@ jobs:
 
       - name: Load custom feeds
         run: |
-          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x $DIY_P1_SH
+          [ -e ${{ github.event.inputs.feedsConfig }} ] && mv ${{ github.event.inputs.feedsConfig }} openwrt/feeds.conf.default
+          chmod +x ${{ github.event.inputs.beforeFeeds }}
           cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P1_SH
+          $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -244,9 +268,9 @@ jobs:
         run: |
           [ -e files ] && mv files openwrt/files
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x $DIY_P2_SH
+          chmod +x ${{ github.event.inputs.afterFeeds }}
           cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P2_SH
+          $GITHUB_WORKSPACE/${{ github.event.inputs.afterFeeds }}
 
       - name: Download package
         id: package
@@ -274,14 +298,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@main
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+        if: steps.compile.outputs.status == 'success' && github.event.inputs.uploadBinDir == 'true'
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+        if: github.event.inputs.uploadFirmware == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -297,7 +321,7 @@ jobs:
 
       - name: Upload firmware to cowtransfer
         id: cowtransfer
-        if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
+        if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadCowtransfer == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -306,7 +330,7 @@ jobs:
 
       - name: Upload firmware to WeTransfer
         id: wetransfer
-        if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
+        if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadWetransfer == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -315,12 +339,12 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: github.event.inputs.uploadRelease == 'true' && !cancelled()
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           touch release.txt
-          [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
-          [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+          [ ${{ github.event.inputs.uploadCowtransfer }} = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
+          [ ${{ github.event.inputs.uploadWetransfer }} = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
           echo "::set-output name=status::success"
 
       - name: Upload firmware to release
@@ -341,7 +365,7 @@ jobs:
 
       - name: Remove old Releases
         uses: dev-drprasad/delete-older-releases@v0.2.0
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: github.event.inputs.uploadRelease == 'true' && !cancelled()
         with:
           keep_latest: 3
           delete_tags: true
@@ -383,10 +407,10 @@ jobs:
 
       - name: Load custom feeds
         run: |
-          [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x $DIY_P1_SH
+          [ -e ${{ github.event.inputs.feedsConfig }} ] && mv ${{ github.event.inputs.feedsConfig }} openwrt/feeds.conf.default
+          chmod +x ${{ github.event.inputs.beforeFeeds }}
           cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P1_SH
+          $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -398,9 +422,9 @@ jobs:
         run: |
           [ -e files ] && mv files openwrt/files
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x $DIY_P2_SH
+          chmod +x ${{ github.event.inputs.afterFeeds }}
           cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P2_SH
+          $GITHUB_WORKSPACE/${{ github.event.inputs.afterFeeds }}
 
       - name: Download package
         id: package
@@ -428,14 +452,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@main
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+        if: steps.compile.outputs.status == 'success' && github.event.inputs.uploadBinDir == 'true'
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+        if: github.event.inputs.uploadFirmware == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -451,7 +475,7 @@ jobs:
 
       - name: Upload firmware to cowtransfer
         id: cowtransfer
-        if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
+        if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadCowtransfer == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -460,7 +484,7 @@ jobs:
 
       - name: Upload firmware to WeTransfer
         id: wetransfer
-        if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
+        if: steps.organize.outputs.status == 'success' && github.event.inputs.uploadWetransfer == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -469,12 +493,12 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: github.event.inputs.uploadRelease == 'true' && !cancelled()
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           touch release.txt
-          [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
-          [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+          [ ${{ github.event.inputs.uploadCowtransfer }} = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
+          [ ${{ github.event.inputs.uploadWetransfer }} = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
           echo "::set-output name=status::success"
 
       - name: Upload firmware to release
@@ -495,7 +519,7 @@ jobs:
 
       - name: Remove old Releases
         uses: dev-drprasad/delete-older-releases@v0.2.0
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: github.event.inputs.uploadRelease == 'true' && !cancelled()
         with:
           keep_latest: 3
           delete_tags: true
