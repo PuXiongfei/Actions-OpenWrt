@@ -82,7 +82,7 @@ jobs:
             echo "BUILD_DEVICE=$tempValue" >> $GITHUB_ENV
           fi
 
-          if [[ contains(${{ env.BUILD_DEVICE }}, '${{ github.job }}') ]]; then
+          if [[ contains('${{ env.BUILD_DEVICE }}', '${{ github.job }}') ]]; then
             echo "CONFIG_FILE=config/${{ github.job }}.config" >> $GITHUB_ENV
           else
             echo "device not in buildDevice..."
