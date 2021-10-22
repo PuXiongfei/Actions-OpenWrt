@@ -8,10 +8,9 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Build OpenWrt
+name: Build R3G OpenWrt
 
 env:
-  BUILD_DEVICE: "D2,K3,R3G"
   REPO_URL: coolsnowwolf/lede
   REPO_BRANCH: master
   FEEDS_CONF: config/feeds.conf.default
@@ -29,10 +28,6 @@ on:
     types: [OpenWrt]
   workflow_dispatch:
     inputs:
-      buildDevice:
-        description: "build device"
-        required: true
-        default: "D2,K3,R3G"
       repository:
         description: "Repository name with owner."
         required: true
@@ -76,18 +71,7 @@ jobs:
     steps:
       - name: Env setting
         run: |
-          tempValue=${{ github.event.inputs.repository }}
-          if [[ -n "$tempValue" && "$tempValue" != "${{ env.BUILD_DEVICE }}" ]]; then
-            echo "BUILD_DEVICE=${{ env.BUILD_DEVICE }} set value $tempValue"
-            echo "BUILD_DEVICE=$tempValue" >> $GITHUB_ENV
-          fi
-
-          if [[ contains('${{ env.BUILD_DEVICE }}', '${{ github.job }}') ]]; then
-            echo "CONFIG_FILE=config/${{ github.job }}.config" >> $GITHUB_ENV
-          else
-            echo "device not in buildDevice..."
-            exit 0;
-          fi
+          echo "CONFIG_FILE=config/${{ github.job }}.config" >> $GITHUB_ENV
 
           tempValue=${{ github.event.inputs.repository }}
           if [[ -n "$tempValue" && "$tempValue" != "${{ env.REPO_URL }}" ]]; then
