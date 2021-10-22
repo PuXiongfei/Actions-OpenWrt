@@ -37,13 +37,13 @@ jobs:
       - name: Env value replace
         run: |
           tempValue=${{ github.event.inputs.repository }}
-          if [[ -n "$tempValue" && "$tempValue" != "$env.REPO_URL" ]]; then
-            echo "replace: REPO_URL=$tempValue"
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.REPO_URL }}" ]]; then
+            echo "REPO_URL=${{ env.REPO_URL }} replace value $tempValue"
             "REPO_URL=$tempValue" >> $GITHUB_ENV
           fi
           tempValue=${{ github.event.inputs.ref }}
-          if [[ -n "$tempValue" && "$tempValue" != "$env.REPO_BRANCH" ]]; then
-            echo "replace: REPO_BRANCH=$tempValue"
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.REPO_BRANCH }}" ]]; then
+            echo "REPO_BRANCH=${{ env.REPO_BRANCH }} replace value $tempValue"
             "REPO_BRANCH=$tempValue" >> $GITHUB_ENV
           fi
 

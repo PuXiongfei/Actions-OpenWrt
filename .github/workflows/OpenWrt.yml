@@ -71,7 +71,7 @@ on:
 
 jobs:
   R3G:
-    if: "contains(${{ github.event.inputs.buildDevice }}, 'R3G') == true"
+    if: "contains(github.event.inputs.buildDevice, 'R3G')"
     env:
       CONFIG_FILE: config/R3G.config
     runs-on: ubuntu-latest
@@ -79,48 +79,48 @@ jobs:
       - name: Env value replace
         run: |
           tempValue=${{ github.event.inputs.repository }}
-          if [[ -n "$tempValue" && "$tempValue" != "$env.REPO_URL" ]]; then
-            echo "replace: REPO_URL=$tempValue"
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.REPO_URL }}" ]]; then
+            echo "REPO_URL=${{ env.REPO_URL }} replace value $tempValue"
             "REPO_URL=$tempValue" >> $GITHUB_ENV
           fi
           tempValue=${{ github.event.inputs.ref }}
-          if [[ -n "$tempValue" && "$tempValue" != "$env.REPO_BRANCH" ]]; then
-            echo "replace: REPO_BRANCH=$tempValue"
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.REPO_BRANCH }}" ]]; then
+            echo "REPO_BRANCH=${{ env.REPO_BRANCH }} replace value $tempValue"
             "REPO_BRANCH=$tempValue" >> $GITHUB_ENV
           fi
           tempValue=${{ github.event.inputs.beforeFeeds }}
-          if [[ -n "$tempValue" && "$tempValue" != "$env.DIY_P1_SH" ]]; then
-            echo "replace: DIY_P1_SH=$tempValue"
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.DIY_P1_SH }}" ]]; then
+            echo "DIY_P1_SH=${{ env.DIY_P1_SH }} replace value $tempValue"
             "DIY_P1_SH=$tempValue" >> $GITHUB_ENV
           fi
           tempValue=${{ github.event.inputs.afterFeeds }}
-          if [[ -n "$tempValue" && "$tempValue" != "$env.DIY_P2_SH" ]]; then
-            echo "replace: DIY_P2_SH=$tempValue"
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.DIY_P2_SH }}" ]]; then
+            echo "DIY_P2_SH=${{ env.DIY_P2_SH }} replace value $tempValue"
             "DIY_P2_SH=$tempValue" >> $GITHUB_ENV
           fi
           tempValue=${{ github.event.inputs.uploadBinDir }}
-          if [[ -n "$tempValue" && "$tempValue" != "$env.UPLOAD_BIN_DIR" ]]; then
-            echo "replace: UPLOAD_BIN_DIR=$tempValue"
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.UPLOAD_BIN_DIR }}" ]]; then
+            echo "UPLOAD_BIN_DIR=${{ env.UPLOAD_BIN_DIR }} replace value $tempValue"
             "UPLOAD_BIN_DIR=$tempValue" >> $GITHUB_ENV
           fi
           tempValue=${{ github.event.inputs.uploadFirmware }}
-          if [[ -n "$tempValue" && "$tempValue" != "$env.UPLOAD_FIRMWARE" ]]; then
-            echo "replace: UPLOAD_FIRMWARE=$tempValue"
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.UPLOAD_FIRMWARE }}" ]]; then
+            echo "UPLOAD_FIRMWARE=${{ env.UPLOAD_FIRMWARE }} replace value $tempValue"
             "UPLOAD_FIRMWARE=$tempValue" >> $GITHUB_ENV
           fi
           tempValue=${{ github.event.inputs.uploadCowtransfer }}
-          if [[ -n "$tempValue" && "$tempValue" != "$env.UPLOAD_COWTRANSFER" ]]; then
-            echo "replace: UPLOAD_COWTRANSFER=$tempValue"
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.UPLOAD_COWTRANSFER }}" ]]; then
+            echo "UPLOAD_COWTRANSFER=${{ env.UPLOAD_COWTRANSFER }} replace value $tempValue"
             "UPLOAD_COWTRANSFER=$tempValue" >> $GITHUB_ENV
           fi
           tempValue=${{ github.event.inputs.uploadWetransfer }}
-          if [[ -n "$tempValue" && "$tempValue" != "$env.UPLOAD_WETRANSFER" ]]; then
-            echo "replace: UPLOAD_WETRANSFER=$tempValue"
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.UPLOAD_WETRANSFER }}" ]]; then
+            echo "UPLOAD_WETRANSFER=${{ env.UPLOAD_WETRANSFER }} replace value $tempValue"
             "UPLOAD_WETRANSFER=$tempValue" >> $GITHUB_ENV
           fi
           tempValue=${{ github.event.inputs.uploadRelease }}
-          if [[ -n "$tempValue" && "$tempValue" != "$env.UPLOAD_RELEASE" ]]; then
-            echo "replace: UPLOAD_RELEASE=$tempValue"
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.UPLOAD_RELEASE }}" ]]; then
+            echo "UPLOAD_RELEASE=${{ env.UPLOAD_RELEASE }} replace value $tempValue"
             "UPLOAD_RELEASE=$tempValue" >> $GITHUB_ENV
           fi
 
