@@ -70,6 +70,10 @@ if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     git clone --depth=1 https://github.com/lwz322/luci-app-k3screenctrl package/lean/luci-app-k3screenctrl
     rm -rf package/lean/k3screenctrl_build
     git clone --depth=1 https://github.com/lwz322/k3screenctrl_build package/lean/k3screenctrl_build
+    echo "替换brcmfmac4366c-pcie.bin"
+    md5sum $GITHUB_WORKSPACE/config/brcmfmac4366c-pcie_3.0.0.4.386.45898.bin
+    cp -af $GITHUB_WORKSPACE/config/brcmfmac4366c-pcie_3.0.0.4.386.45898.bin package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
+    md5sum package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
     sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& luci-app-k3screenctrl autocore-arm luci-app-rclone luci-app-openclash luci-app-passwall luci-app-aria2/g}' target/linux/bcm53xx/image/Makefile
