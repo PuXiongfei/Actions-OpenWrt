@@ -11,7 +11,6 @@
 name: Build OpenWrt
 
 env:
-  BUILD_DEVICE: "D2,K3,R3G"
   REPO_URL: coolsnowwolf/lede
   REPO_BRANCH: master
   FEEDS_CONF: config/feeds.conf.default
@@ -72,7 +71,7 @@ on:
 
 jobs:
   R3G:
-    if: "contains(env.BUILD_DEVICE, 'R3G') == true || contains(github.event.inputs.buildDevice, 'R3G') == true"
+    if: "contains(${{ github.event.inputs.buildDevice }}, 'R3G') == true"
     env:
       CONFIG_FILE: config/R3G.config
     runs-on: ubuntu-latest
