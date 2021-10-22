@@ -11,6 +11,10 @@
 
 name: OpenWrt Update Checker
 
+env:
+  REPO_URL: coolsnowwolf/lede
+  REPO_BRANCH: master
+
 on:
   workflow_dispatch:
     inputs:
@@ -30,12 +34,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Env value replace
+        run: |
+          tempValue=${{ github.event.inputs.repository }}
+          if [ -z "$tempValue" && "$tempValue" != "{{ env.REPO_URL }}" ]; then
+            echo "replace: REPO_URL=$tempValue"
+            "REPO_URL=$tempValue" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.ref }}
+          if [ -z "$tempValue" && "$tempValue" != "{{ env.REPO_BRANCH }}" ]; then
+            echo "replace: REPO_BRANCH=$tempValue"
+            "REPO_BRANCH=$tempValue" >> $GITHUB_ENV
+          fi
+
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
           path: openwrt
-          repository: ${{ github.event.inputs.repository }}
-          ref: ${{ github.event.inputs.ref }}
+          repository: ${{ env.REPO_URL }}
+          ref: ${{ env.REPO_BRANCH }}
 
       - name: Get Commit Hash
         id: getHash
