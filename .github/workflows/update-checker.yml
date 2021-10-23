@@ -9,14 +9,23 @@
 # Description: Source code update checker
 #
 
-name: Lean's OpenWrt Update Checker
+name: OpenWrt Update Checker
 
 env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_URL: coolsnowwolf/lede
   REPO_BRANCH: master
 
 on:
   workflow_dispatch:
+    inputs:
+      repository:
+        description: "Repository name with owner."
+        required: true
+        default: "coolsnowwolf/lede"
+      ref:
+        description: "The branch, tag or SHA to checkout."
+        required: true
+        default: "master"
   schedule:
     - cron: 0 0 ? * FRI
 
@@ -25,34 +34,53 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Env setting
+        run: |
+          tempValue=${{ github.event.inputs.repository }}
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.REPO_URL }}" ]]; then
+            echo "REPO_URL=${{ env.REPO_URL }} set value $tempValue"
+            echo "REPO_URL=$tempValue" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.ref }}
+          if [[ -n "$tempValue" && "$tempValue" != "${{ env.REPO_BRANCH }}" ]]; then
+            echo "REPO_BRANCH=${{ env.REPO_BRANCH }} set value $tempValue"
+            echo "REPO_BRANCH=$tempValue" >> $GITHUB_ENV
+          fi
 
-    - name: Get Commit Hash
-      id: getHash
-      run: |
-        git clone --depth 1 $REPO_URL -b $REPO_BRANCH .
-        echo "::set-output name=commitHash::$(git rev-parse HEAD)"
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          path: openwrt
+          repository: ${{ env.REPO_URL }}
+          ref: ${{ env.REPO_BRANCH }}
 
-    - name: Compare Commit Hash
-      id: cacheHash
-      uses: actions/cache@v2
-      with:
-        path: .commitHash
-        key: HEAD-${{ steps.getHash.outputs.commitHash }}
+      - name: Get Commit Hash
+        id: getHash
+        run: |
+          cd openwrt
+          echo "::set-output name=commitHash::$(git rev-parse HEAD)"
 
-    - name: Save New Commit Hash
-      if: steps.cacheHash.outputs.cache-hit != 'true'
-      run: |
-        echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
+      - name: Compare Commit Hash
+        id: cacheHash
+        uses: actions/cache@v2
+        with:
+          path: .commitHash
+          key: HEAD-${{ steps.getHash.outputs.commitHash }}
 
-    - name: Trigger build
-      if: steps.cacheHash.outputs.cache-hit != 'true'
-      uses: peter-evans/repository-dispatch@v1
-      with:
-        token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
-        event-type: Source Code Update
+      - name: Save New Commit Hash
+        if: steps.cacheHash.outputs.cache-hit != 'true'
+        run: |
+          echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
 
-    - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
-      with:
-        retain_days: 1
-        keep_minimum_runs: 1
+      - name: Trigger build
+        if: steps.cacheHash.outputs.cache-hit != 'true'
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
+          event-type: OpenWrt
+
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          retain_days: 1
+          keep_minimum_runs: 2
