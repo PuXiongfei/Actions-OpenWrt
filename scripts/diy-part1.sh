@@ -26,4 +26,4 @@ echo "feeds.conf.default 增加 OpenClash"
 echo "src-git OpenClash https://github.com/vernesong/OpenClash" >>feeds.conf.default
 
 echo "feeds.conf.default 增加 small8"
-echo " src-git small8 https://github.com/kenzok8/small-package" >>feeds.conf.default
+echo "src-git small8 https://github.com/kenzok8/small-package" >>feeds.conf.default
