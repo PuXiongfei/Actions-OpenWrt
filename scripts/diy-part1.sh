@@ -24,3 +24,6 @@ echo "src-git passwall https://github.com/xiaorouji/openwrt-passwall" >>feeds.co
 
 echo "feeds.conf.default 增加 OpenClash"
 echo "src-git OpenClash https://github.com/vernesong/OpenClash" >>feeds.conf.default
+
+echo "feeds.conf.default 增加 Lienol openwrt-package"
+echo "src-git Lienol https://github.com/Lienol/openwrt-package" >>feeds.conf.default
