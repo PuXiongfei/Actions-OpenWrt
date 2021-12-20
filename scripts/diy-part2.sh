@@ -49,11 +49,11 @@ if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g;s/\\/luci-app-passwall \\/g}' target/linux/ramips/image/mt7621.mk
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
     echo "修改passwall默认值"
-    sed -i '/"Include Haproxy"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
-    cat package/small-package/passwall/luci-app-passwall/Makefile
+    sed -i '/"Include Haproxy"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/luci-app-passwall/Makefile
+    sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/luci-app-passwall/Makefile
+    sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/luci-app-passwall/Makefile
+    sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' package/small-package/luci-app-passwall/Makefile
+    cat package/small-package/luci-app-passwall/Makefile
 fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     echo "替换k3screenctrl"
@@ -84,11 +84,11 @@ if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-rclone luci-app-openclash luci-app-passwall luci-app-aria2 \\/g}' target/linux/ramips/image/mt7621.mk
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
     echo "修改passwall默认值"
-    sed -i '/"Include Haproxy"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
-    cat package/small-package/passwall/luci-app-passwall/Makefile
+    sed -i '/"Include Haproxy"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/luci-app-passwall/Makefile
+    sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/luci-app-passwall/Makefile
+    sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/luci-app-passwall/Makefile
+    sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' package/small-package/luci-app-passwall/Makefile
+    cat package/small-package/luci-app-passwall/Makefile
     if [ -e $GITHUB_WORKSPACE/config/R3G_switch.patch ]; then
         echo "R3G_switch.patch"
         cat $GITHUB_WORKSPACE/config/R3G_switch.patch
