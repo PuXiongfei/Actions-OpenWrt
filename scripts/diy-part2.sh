@@ -33,32 +33,29 @@ sed -n '/luci-theme-/p' feeds/luci/collections/luci/Makefile
 
 echo "删除 lean/luci-theme-argon"
 rm -rf package/lean/luci-theme-argon
-ls package/lean | grep "*argon*"
+ls package/lean | grep *argon*
 
 echo "增加 jerrykuku/luci-theme-argon"
-git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon /tmp/jerrykuku/luci-theme-argon
-cp -af /tmp/jerrykuku/luci-theme-argon package/lean
-ls package/lean | grep "*argon*"
+git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
+ls package | grep *argon*
 
 echo "增加 jerrykuku/luci-app-argon-config"
-git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config /tmp/jerrykuku/luci-app-argon-config
-cp -af /tmp/jerrykuku/luci-app-argon-config package/lean
-ls package/lean | grep "*argon-config*"
+git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
+ls package | grep *argon-config*
 
 echo "增加 xiaorouji/openwrt-passwall"
-git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall /tmp/xiaorouji/openwrt-passwall
-cp -af /tmp/xiaorouji/openwrt-passwall/* package/lean
-ls package/lean | grep "*passwall*"
+git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall package/openwrt-passwall
+ls package | grep *passwall*
 
 echo "增加 vernesong/luci-app-openclash"
-git clone --depth 1 https://github.com/vernesong/OpenClash /tmp/vernesong/OpenClash
-cp -af /tmp/vernesong/OpenClash/luci-app-openclash package/lean
-ls package/lean | grep "*openclash*"
+git clone --depth 1 https://github.com/vernesong/OpenClash package/OpenClash
+ls package | grep *openclash*
 
 echo "增加 Lienol/luci-app-socat"
-git clone --depth 1 https://github.com/Lienol/openwrt-package /tmp/Lienol/openwrt-package
-cp -af /tmp/Lienol/openwrt-package/luci-app-socat package/lean
-ls package/lean | grep "*socat*"
+git clone --depth 1 https://github.com/Lienol/openwrt-package Lienol/openwrt-package
+ls -1 Lienol/openwrt-package | grep *socat*
+cp -af Lienol/openwrt-package/luci-app-socat package
+ls package | grep *socat*
 
 echo "修改DEFAULT_PACKAGES"
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
@@ -81,30 +78,27 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     echo "删除 lean/k3screenctrl"
     rm -rf package/lean/k3screenctrl
-    ls package/lean | grep "*k3screenctrl*"
+    ls package/lean | grep *k3screenctrl*
 
     echo "删除 lean/luci-app-k3screenctrl"
     rm -rf package/lean/luci-app-k3screenctrl
-    ls package/lean | grep "*luci-app-k3screenctrl*"
+    ls package/lean | grep *luci-app-k3screenctrl*
 
     echo "删除 lean/k3screenctrl_build"
     rm -rf package/lean/k3screenctrl_build
-    ls package/lean | grep "*k3screenctrl_build*"
+    ls package/lean | grep *k3screenctrl_build*
 
     echo "增加 lwz322/k3screenctrl"
-    git clone --depth=1 https://github.com/lwz322/k3screenctrl /tmp/lwz322/k3screenctrl
-    cp -af /tmp/lwz322/k3screenctrl package/lean
-    ls package/lean | grep "*k3screenctrl*"
+    git clone --depth=1 https://github.com/lwz322/k3screenctrl package/k3screenctrl
+    ls package | grep *k3screenctrl*
 
     cho "增加 lwz322/luci-app-k3screenctrl"
-    git clone --depth=1 https://github.com/lwz322/luci-app-k3screenctrl /tmp/lwz322/luci-app-k3screenctrl
-    cp -af /tmp/lwz322/luci-app-k3screenctrl package/lean
-    ls package/lean | grep "*luci-app-k3screenctrl*"
+    git clone --depth=1 https://github.com/lwz322/luci-app-k3screenctrl package/luci-app-k3screenctrl
+    ls package | grep *luci-app-k3screenctrl*
 
     cho "增加 lwz322/k3screenctrl_build"
-    git clone --depth=1 https://github.com/lwz322/k3screenctrl_build /tmp/lwz322/k3screenctrl_build
-    cp -af /tmp/lwz322/k3screenctrl_build package/lean
-    ls package/lean | grep "*k3screenctrl_build*"
+    git clone --depth=1 https://github.com/lwz322/k3screenctrl_build package/k3screenctrl_build
+    ls package | grep *k3screenctrl_build*
 
     echo "替换brcmfmac4366c-pcie.bin"
     md5sum $GITHUB_WORKSPACE/config/brcmfmac4366c-pcie_3.0.0.4.386.45898.bin
