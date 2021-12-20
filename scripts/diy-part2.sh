@@ -80,10 +80,10 @@ if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     echo "增加 lwz322/k3screenctrl"
     git clone --depth=1 https://github.com/lwz322/k3screenctrl package/k3screenctrl
 
-    cho "增加 lwz322/luci-app-k3screenctrl"
+    echo "增加 lwz322/luci-app-k3screenctrl"
     git clone --depth=1 https://github.com/lwz322/luci-app-k3screenctrl package/luci-app-k3screenctrl
 
-    cho "增加 lwz322/k3screenctrl_build"
+    echo "增加 lwz322/k3screenctrl_build"
     git clone --depth=1 https://github.com/lwz322/k3screenctrl_build package/k3screenctrl_build
 
     echo "替换brcmfmac4366c-pcie.bin"
