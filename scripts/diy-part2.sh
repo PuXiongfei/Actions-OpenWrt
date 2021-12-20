@@ -31,16 +31,16 @@ echo "默认使用argon主题"
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
 sed -n '/luci-theme-/p' feeds/luci/collections/luci/Makefile
 
-echo "替换argon主题"
+echo "删除 lean/luci-theme-argon"
 rm -rf package/lean/luci-theme-argon
-git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/lean/luci-theme-argon
-rm -rf package/lean/luci-app-argon-config
-git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config.git package/lean/luci-app-argon-config
+
+echo "增加 kenzok78 small-package"
+git clone --depth=1 https://github.com/kenzok78/small-package package/small-package
 
 echo "修改DEFAULT_PACKAGES"
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 sed -i '/DEFAULT_PACKAGES.router/,/^ifneq/{s/luci-app-autoreboot//g;s/luci-app-unblockmusic//g;s/luci-app-ramfree//g;s/luci-app-accesscontrol//g}' include/target.mk
-sed -i '/DEFAULT_PACKAGES.router/a\ automount ipv6helper ddns-scripts_cloudflare.com-v4 luci-app-argon-config luci-app-diskman luci-app-easymesh luci-app-hd-idle luci-app-pushbot luci-app-samba4 luci-app-socat luci-app-ttyd luci-app-udpxy luci-app-webadmin luci-app-zerotier \\' include/target.mk
+sed -i '/DEFAULT_PACKAGES.router/a\ automount ipv6helper ddns-scripts_cloudflare.com-v4 luci-app-argon-config luci-app-diskman luci-app-easymesh luci-app-filebrowser luci-app-hd-idle luci-app-pushbot luci-app-samba4 luci-app-socat luci-app-ttyd luci-app-udpxy luci-app-webadmin luci-app-zerotier \\' include/target.mk
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 
 if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
@@ -49,18 +49,11 @@ if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g;s/\\/luci-app-passwall \\/g}' target/linux/ramips/image/mt7621.mk
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
     echo "修改passwall默认值"
-    sed -n '/"Include Haproxy"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include Haproxy"/,/^config/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include Haproxy"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include V2ray"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include V2ray"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include V2ray-Plugin/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include V2ray-Plugin/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
+    sed -i '/"Include Haproxy"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
+    sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
+    sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
+    sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
+    cat package/small-package/passwall/luci-app-passwall/Makefile
 fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     echo "替换k3screenctrl"
@@ -91,18 +84,11 @@ if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-rclone luci-app-openclash luci-app-passwall luci-app-aria2 \\/g}' target/linux/ramips/image/mt7621.mk
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
     echo "修改passwall默认值"
-    sed -n '/"Include Haproxy"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include Haproxy"/,/^config/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include Haproxy"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include V2ray"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include V2ray"/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include V2ray-Plugin/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include V2ray-Plugin/,/^config/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
-    sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' feeds/passwall/luci-app-passwall/Makefile
-    sed -n '/"Include Xray"/,/^endmenu/p' feeds/passwall/luci-app-passwall/Makefile
+    sed -i '/"Include Haproxy"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
+    sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
+    sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
+    sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' package/small-package/passwall/luci-app-passwall/Makefile
+    cat package/small-package/passwall/luci-app-passwall/Makefile
     if [ -e $GITHUB_WORKSPACE/config/R3G_switch.patch ]; then
         echo "R3G_switch.patch"
         cat $GITHUB_WORKSPACE/config/R3G_switch.patch
