@@ -27,20 +27,41 @@ echo "修改country为CN"
 sed -i 's/US$/CN/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh
 sed -n '/.country=/p' package/kernel/mac80211/files/lib/wifi/mac80211.sh
 
-echo "默认使用argon主题"
+echo "修改luci-theme-bootstrap为luci-theme-argon"
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
 sed -n '/luci-theme-/p' feeds/luci/collections/luci/Makefile
+
+echo "ls -1 package/lean"
+ls -1 package/lean
 
 echo "删除 lean/luci-theme-argon"
 rm -rf package/lean/luci-theme-argon
 
-echo "增加 kenzok78 small-package"
-git clone --depth=1 https://github.com/kenzok78/small-package package/small-package
+echo "增加 jerrykuku/luci-theme-argon"
+git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/lean/luci-theme-argon
+
+echo "增加 jerrykuku/luci-app-argon-config"
+git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/lean/luci-app-argon-config
+
+echo "增加 xiaorouji/openwrt-passwall"
+git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall /tmp/xiaorouji/openwrt-passwall
+cp -af /tmp/xiaorouji/openwrt-passwall/* package/lean
+
+echo "增加 vernesong/luci-app-openclash"
+git clone --depth 1 https://github.com/vernesong/OpenClash /tmp/vernesong/OpenClash
+cp -af /tmp/vernesong/OpenClash/luci-app-openclash package/lean
+
+echo "增加 Lienol/luci-app-socat"
+git clone --depth 1 https://github.com/Lienol/openwrt-package /tmp/Lienol/openwrt-package
+cp -af /tmp/Lienol/openwrt-package/luci-app-socat package/lean
+
+echo "ls -1 package/lean"
+ls -1 package/lean
 
 echo "修改DEFAULT_PACKAGES"
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 sed -i '/DEFAULT_PACKAGES.router/,/^ifneq/{s/luci-app-autoreboot//g;s/luci-app-unblockmusic//g;s/luci-app-ramfree//g;s/luci-app-accesscontrol//g}' include/target.mk
-sed -i '/DEFAULT_PACKAGES.router/a\ automount ipv6helper ddns-scripts_cloudflare.com-v4 luci-app-argon-config luci-app-diskman luci-app-easymesh luci-app-filebrowser luci-app-hd-idle luci-app-pushbot luci-app-samba4 luci-app-socat luci-app-ttyd luci-app-udpxy luci-app-webadmin luci-app-zerotier \\' include/target.mk
+sed -i '/DEFAULT_PACKAGES.router/a\ automount ipv6helper ddns-scripts_cloudflare.com-v4 luci-app-argon-config luci-app-diskman luci-app-easymesh luci-app-hd-idle luci-app-pushbot luci-app-samba4 luci-app-socat luci-app-ttyd luci-app-udpxy luci-app-webadmin luci-app-zerotier \\' include/target.mk
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 
 if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
