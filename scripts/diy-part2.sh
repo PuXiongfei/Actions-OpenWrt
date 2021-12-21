@@ -62,7 +62,7 @@ if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
     sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/g}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
     sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
-    cat package/custom/openwrt-passwall/lean/luci-app-passwall/Makefile
+    cat package/custom/openwrt-passwall/luci-app-passwall/Makefile
 fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     echo "替换Hill-98/openwrt-k3screenctrl"
@@ -96,7 +96,7 @@ if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/g}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
     sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/g}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
     sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/g}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
-    cat package/custom/openwrt-passwall/lean/luci-app-passwall/Makefile
+    cat package/custom/openwrt-passwall/luci-app-passwall/Makefile
     if [ -e $GITHUB_WORKSPACE/config/R3G_switch.patch ]; then
         echo "R3G_switch.patch"
         cat $GITHUB_WORKSPACE/config/R3G_switch.patch
