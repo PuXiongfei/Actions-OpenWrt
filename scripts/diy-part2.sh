@@ -65,19 +65,13 @@ if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     cat package/custom/openwrt-passwall/luci-app-passwall/Makefile
 fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
-    echo "替换Hill-98/openwrt-k3screenctrl"
-    rm -rf package/lean/k3screenctrl && git clone --depth=1 https://github.com/Hill-98/openwrt-k3screenctrl package/lean/k3screenctrl
-
-    echo "增加Hill-98/luci-app-k3screenctrl"
-    git clone --depth=1 https://github.com/Hill-98/luci-app-k3screenctrl package/custom/luci-app-k3screenctrl
-
     echo "替换brcmfmac4366c-pcie.bin"
     md5sum $GITHUB_WORKSPACE/config/brcmfmac4366c-pcie_3.0.0.4.386.45987.bin
     cp -af $GITHUB_WORKSPACE/config/brcmfmac4366c-pcie_3.0.0.4.386.45987.bin package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     md5sum package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
-    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-aria2 luci-app-k3screenctrl luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone/g}' target/linux/bcm53xx/image/Makefile
+    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-aria2 luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone/g}' target/linux/bcm53xx/image/Makefile
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
     echo "修改Makefile只编译K3"
     sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
