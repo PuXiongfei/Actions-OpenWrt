@@ -37,6 +37,9 @@ rm -rf package/lean/luci-theme-argon && git clone --depth=1 -b 18.06 https://git
 echo "增加jerrykuku/luci-app-argon-config"
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/custom/luci-app-argon-config
 
+echo "增加rufengsuixing/luci-app-adguardhome"
+git clone --depth=1 https://github.com/rufengsuixing/luci-app-adguardhome package/custom/luci-app-adguardhome
+
 echo "增加xiaorouji/openwrt-passwall"
 git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall package/custom/openwrt-passwall
 
@@ -49,7 +52,7 @@ git clone --depth 1 https://github.com/Lienol/openwrt-package Lienol/openwrt-pac
 echo "修改DEFAULT_PACKAGES"
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 sed -i '/DEFAULT_PACKAGES.router/,/^ifneq/{s/luci-app-autoreboot//g;s/luci-app-unblockmusic//g;s/luci-app-ramfree//g;s/luci-app-accesscontrol//g}' include/target.mk
-sed -i '/DEFAULT_PACKAGES.router/a\ automount ddns-scripts_cloudflare.com-v4 ipv6helper luci-app-argon-config luci-app-diskman luci-app-easymesh luci-app-hd-idle luci-app-nfs luci-app-samba4 luci-app-socat luci-app-ttyd luci-app-udpxy luci-app-webadmin luci-app-wireguard luci-app-zerotier \\' include/target.mk
+sed -i '/DEFAULT_PACKAGES.router/a\ automount ddns-scripts_cloudflare.com-v4 ipv6helper luci-app-adguardhome luci-app-argon-config luci-app-diskman luci-app-easymesh luci-app-hd-idle luci-app-nfs luci-app-samba4 luci-app-socat luci-app-ttyd luci-app-udpxy luci-app-webadmin luci-app-wireguard \\' include/target.mk
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 
 if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
