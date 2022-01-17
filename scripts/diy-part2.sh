@@ -64,7 +64,7 @@ git clone --depth 1 https://github.com/vernesong/OpenClash package/custom/OpenCl
 echo "修改DEFAULT_PACKAGES"
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 sed -i '/DEFAULT_PACKAGES.router/,/^ifneq/{s/luci-app-autoreboot//g;s/luci-app-unblockmusic//g;s/luci-app-accesscontrol//g}' include/target.mk
-sed -i '/DEFAULT_PACKAGES.router/a\ automount ddns-scripts_cloudflare.com-v4 ipv6helper luci-app-argon-config luci-app-diskman luci-app-easymesh luci-app-hd-idle luci-app-nfs luci-app-samba4 luci-app-ttyd luci-app-webadmin \\' include/target.mk
+sed -i '/DEFAULT_PACKAGES.router/a\\tautomount ddns-scripts_cloudflare.com-v4 ipv6helper luci-app-argon-config luci-app-diskman luci-app-easymesh luci-app-hd-idle luci-app-nfs luci-app-samba4 luci-app-ttyd luci-app-webadmin \\' include/target.mk
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 
 if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
@@ -120,8 +120,8 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     echo "修改target/linux/x86/Makefile"
     sed -n '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/p' target/linux/x86/Makefile
-    sed -i '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/{s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-zerotier//g;s/luci-app-xlnetacc//g}' include/target.mk
-    sed -i '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-docker luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone \\/}' include/target.mk
+    sed -i '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/{s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-zerotier//g;s/luci-app-xlnetacc//g}' target/linux/x86/Makefile
+    sed -i '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-docker luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone \\/}' target/linux/x86/Makefile
     sed -n '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/p' target/linux/x86/Makefile
 
     echo "修改GRUB_TITLE"
@@ -131,10 +131,8 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
 
     echo "修改QCOW2_IMAGES"
     sed -n '/QCOW2_IMAGES$/,/config/p' config/Config-images.in
-    sed -n '/QCOW2_IMAGES$/a\\t\tdefault y' config/Config-images.in
+    sed -i '/QCOW2_IMAGES$/a\\t\tdefault y' config/Config-images.in
     sed -n '/QCOW2_IMAGES$/,/config/p' config/Config-images.in
-fi
-if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
 fi
 
 echo "查看package/custom"
