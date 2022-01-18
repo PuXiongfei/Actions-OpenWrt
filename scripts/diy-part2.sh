@@ -120,7 +120,7 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     echo "修改target/linux/x86/Makefile"
     sed -n '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/p' target/linux/x86/Makefile
-    sed -i '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/{s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-zerotier//g;s/luci-app-xlnetacc//g}' target/linux/x86/Makefile
+    sed -i '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/{s/autosamba//g;s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-zerotier//g;s/luci-app-xlnetacc//g}' target/linux/x86/Makefile
     sed -i '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-docker luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone \\/}' target/linux/x86/Makefile
     sed -n '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/p' target/linux/x86/Makefile
 
