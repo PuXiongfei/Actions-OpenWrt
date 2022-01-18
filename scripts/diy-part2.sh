@@ -64,19 +64,19 @@ git clone --depth 1 https://github.com/vernesong/OpenClash package/custom/OpenCl
 echo "修改DEFAULT_PACKAGES"
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 sed -i '/DEFAULT_PACKAGES.router/,/^ifneq/{s/luci-app-autoreboot//g;s/luci-app-unblockmusic//g;s/luci-app-accesscontrol//g}' include/target.mk
-sed -i '/DEFAULT_PACKAGES.router/a\\tautomount ddns-scripts_cloudflare.com-v4 ipv6helper luci-app-argon-config luci-app-diskman luci-app-easymesh luci-app-hd-idle luci-app-nfs luci-app-samba4 luci-app-ttyd luci-app-webadmin \\' include/target.mk
+sed -i '/DEFAULT_PACKAGES.router/a\\tautomount ddns-scripts_cloudflare.com-v4 ipv6helper luci-app-argon-config luci-app-diskman luci-app-easymesh luci-app-hd-idle luci-app-samba4 luci-app-ttyd luci-app-webadmin \\' include/target.mk
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 
 if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
-    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g;s/\\/luci-app-passwall luci-app-wireguard \\/}' target/linux/ramips/image/mt7621.mk
+    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g;s/\\/luci-app-mwan3helper luci-app-nfs luci-app-passwall luci-app-wireguard \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
     echo "修改passwall默认值"
-    sed -i '/"Include Haproxy"/,/^config/{s/arm/arm||mips||mipsel/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
-    sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
+    sed -i '/"INCLUDE_Shadowsocks_Libev_Client"/,/^config/{s/default y/default n/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
+    sed -i '/"INCLUDE_ShadowsocksR_Libev_Client"/,/^config/{s/default y/default n/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
+    sed -i '/"INCLUDE_Simple_Obfs"/,/^config/{s/default y/default n/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
+    sed -i '/"Include Xray"/,/default.*/{/default/s/$/&||mipsel}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
     cat package/custom/openwrt-passwall/luci-app-passwall/Makefile
 fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
@@ -86,7 +86,7 @@ if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     md5sum package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
-    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-adguardhome luci-app-aria2 luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard/}' target/linux/bcm53xx/image/Makefile
+    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-adguardhome luci-app-aria2 luci-app-mwan3helper luci-app-netdata luci-app-nfs luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard/}' target/linux/bcm53xx/image/Makefile
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
     echo "修改Makefile只编译K3"
     sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
@@ -98,13 +98,13 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
-    sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard \\/}' target/linux/ramips/image/mt7621.mk
+    sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-mwan3helper luci-app-netdata luci-app-nfs luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
     echo "修改passwall默认值"
-    sed -i '/"Include Haproxy"/,/^config/{s/arm/arm||mips||mipsel/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray"/,/^config/{s/arm/arm||mips||mipsel/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
-    sed -i '/"Include V2ray-Plugin/,/^config/{s/arm/arm||mips||mipsel/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
-    sed -i '/"Include Xray"/,/^endmenu/{s/arm/arm||mips||mipsel/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
+    sed -i '/"INCLUDE_Shadowsocks_Libev_Client"/,/^config/{s/default y/default n/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
+    sed -i '/"INCLUDE_ShadowsocksR_Libev_Client"/,/^config/{s/default y/default n/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
+    sed -i '/"INCLUDE_Simple_Obfs"/,/^config/{s/default y/default n/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
+    sed -i '/"Include Xray"/,/default.*/{/default/s/$/&||mipsel}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
     cat package/custom/openwrt-passwall/luci-app-passwall/Makefile
     if [ -e $GITHUB_WORKSPACE/config/R3G_switch.patch ]; then
         echo "R3G_switch.patch"
@@ -119,10 +119,10 @@ if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
 fi
 if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     echo "修改target/linux/x86/Makefile"
-    sed -n '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/p' target/linux/x86/Makefile
-    sed -i '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/{s/autosamba//g;s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-zerotier//g;s/luci-app-xlnetacc//g}' target/linux/x86/Makefile
-    sed -i '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-docker luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone \\/}' target/linux/x86/Makefile
-    sed -n '/DEFAULT_PACKAGES/,/$(eval $(call BuildTarget))/p' target/linux/x86/Makefile
+    sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
+    sed -i '/DEFAULT_PACKAGES/,/BuildTarget/{s/autosamba//g;s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-zerotier//g;s/luci-app-xlnetacc//g}' target/linux/x86/Makefile
+    sed -i '/DEFAULT_PACKAGES/,/BuildTarget/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-mwan3helper luci-app-docker luci-app-netdata luci-app-nfs luci-app-openclash luci-app-passwall luci-app-rclone \\/}' target/linux/x86/Makefile
+    sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
 
     echo "修改GRUB_TITLE"
     sed -n '/GRUB_TITLE$/,/help$/p' config/Config-images.in
@@ -133,6 +133,17 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     sed -n '/QCOW2_IMAGES$/,/config/p' config/Config-images.in
     sed -i '/QCOW2_IMAGES$/a\\t\tdefault y' config/Config-images.in
     sed -n '/QCOW2_IMAGES$/,/config/p' config/Config-images.in
+
+    echo "修改TARGET_IMAGES_GZIP"
+    sed -n '/TARGET_IMAGES_GZIP$/,/default n/p' config/Config-images.in
+    sed -i '/TARGET_IMAGES_GZIP$/,/default n/{s/default n/default y}' config/Config-images.in
+    sed -n '/TARGET_IMAGES_GZIP$/,/default n/p' config/Config-images.in
+fi
+if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
+    echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
+    sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
+    sed -i '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/{/DEVICE_PACKAGES/s/$/& }' target/linux/ramips/image/mt7620.mk
+    sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
 fi
 
 echo "查看package/custom"
