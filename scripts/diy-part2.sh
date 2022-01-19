@@ -163,7 +163,7 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
-    sed -i '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/{/DEVICE_PACKAGES/s/$/& luci-app-nfs/}' target/linux/ramips/image/mt7620.mk
+    sed -i '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/{/DEVICE_PACKAGES/s/$/& luci-app-wireguard/}' target/linux/ramips/image/mt7620.mk
     sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
 fi
 
