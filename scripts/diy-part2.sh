@@ -70,7 +70,7 @@ sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
-    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/luci-app-aria2 luci-app-mwan3helper luci-app-nfs luci-app-passwall luci-app-wireguard \\/}' target/linux/ramips/image/mt7621.mk
+    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/luci-app-aria2 luci-app-mwan3helper luci-app-nfs luci-app-passwall luci-app-wireguard luci-app-zerotier \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
     echo "修改passwall默认值"
     sed -n '/INCLUDE_Shadowsocks_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci-app-passwall/Makefile
@@ -90,13 +90,21 @@ if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     sed -n '/INCLUDE_Xray$/,/default/p' package/custom/openwrt-passwall/luci-app-passwall/Makefile
 fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
+    echo "lean/k3screenctrl"
+    rm -rf package/lean/k3screenctrl
+    echo "删除lean/luci-app-k3screenctrl"
+    rm -rf package/lean/luci-app-k3screenctrl
+    echo "增加Hill-98/luci-app-k3screenctrl"
+    git clone --depth 1 https://github.com/Hill-98/luci-app-k3screenctrl package/custom/luci-app-k3screenctrl
+    echo "增加Hill-98/openwrt-k3screenctrl"
+    git clone --depth 1 https://github.com/Hill-98/openwrt-k3screenctrl package/custom/openwrt-k3screenctrl
     echo "替换brcmfmac4366c-pcie.bin"
     md5sum $GITHUB_WORKSPACE/config/brcmfmac4366c-pcie_3.0.0.4.386.45987.bin
     cp -af $GITHUB_WORKSPACE/config/brcmfmac4366c-pcie_3.0.0.4.386.45987.bin package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     md5sum package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
-    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-adguardhome luci-app-aria2 luci-app-mwan3helper luci-app-netdata luci-app-nfs luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard/}' target/linux/bcm53xx/image/Makefile
+    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-adguardhome luci-app-aria2 luci-app-mwan3helper luci-app-netdata luci-app-nfs luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard luci-app-zerotier/}' target/linux/bcm53xx/image/Makefile
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
     echo "修改Makefile只编译K3"
     sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
@@ -108,7 +116,7 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
-    sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-mwan3helper luci-app-netdata luci-app-nfs luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard \\/}' target/linux/ramips/image/mt7621.mk
+    sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-mwan3helper luci-app-netdata luci-app-nfs luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard luci-app-zerotier \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
     echo "修改passwall默认值"
     sed -n '/INCLUDE_Shadowsocks_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci-app-passwall/Makefile
@@ -130,7 +138,7 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     echo "修改target/linux/x86/Makefile"
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
-    sed -i '/DEFAULT_PACKAGES/,/BuildTarget/{s/autosamba//g;s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-zerotier//g;s/luci-app-xlnetacc//g}' target/linux/x86/Makefile
+    sed -i '/DEFAULT_PACKAGES/,/BuildTarget/{s/autosamba//g;s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-xlnetacc//g}' target/linux/x86/Makefile
     sed -i '/DEFAULT_PACKAGES/a\luci-app-adguardhome luci-app-aria2 luci-app-mwan3helper luci-app-docker luci-app-netdata luci-app-nfs luci-app-openclash luci-app-passwall luci-app-rclone \\' target/linux/x86/Makefile
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
 
