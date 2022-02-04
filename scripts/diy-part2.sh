@@ -70,8 +70,7 @@ sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
-    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g}' target/linux/ramips/image/mt7621.mk
-    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/luci-app-mwan3helper luci-app-nfs luci-app-passwall luci-app-wireguard \\/}' target/linux/ramips/image/mt7621.mk
+    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/luci-app-aria2 luci-app-mwan3helper luci-app-nfs luci-app-passwall luci-app-wireguard \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
     echo "修改passwall默认值"
     sed -n '/INCLUDE_Shadowsocks_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci-app-passwall/Makefile
@@ -127,16 +126,6 @@ if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     sed -n '/INCLUDE_Xray$/,/default/p' package/custom/openwrt-passwall/luci-app-passwall/Makefile
     sed -i '/INCLUDE_Xray$/,/default/{/default/s/$/&||mipsel/}' package/custom/openwrt-passwall/luci-app-passwall/Makefile
     sed -n '/INCLUDE_Xray$/,/default/p' package/custom/openwrt-passwall/luci-app-passwall/Makefile
-    if [ -e $GITHUB_WORKSPACE/config/R3G_switch.patch ]; then
-        echo "显示R3G_switch.patch"
-        cat $GITHUB_WORKSPACE/config/R3G_switch.patch
-        echo "应用R3G_switch.patch"
-        git apply $GITHUB_WORKSPACE/config/R3G_switch.patch
-        echo "显示mt7621_xiaomi_mi-router-3g.dts"
-        cat target/linux/ramips/dts/mt7621_xiaomi_mi-router-3g.dts
-        echo "显示02_network"
-        cat target/linux/ramips/mt7621/base-files/etc/board.d/02_network
-    fi
 fi
 if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     echo "修改target/linux/x86/Makefile"
