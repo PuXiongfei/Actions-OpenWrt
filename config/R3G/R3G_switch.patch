@@ -1,0 +1,83 @@
+diff --git a/target/linux/ramips/dts/mt7621_xiaomi_mi-router-3g.dts b/target/linux/ramips/dts/mt7621_xiaomi_mi-router-3g.dts
+index 40ea6625d..96e834d38 100644
+--- a/target/linux/ramips/dts/mt7621_xiaomi_mi-router-3g.dts
++++ b/target/linux/ramips/dts/mt7621_xiaomi_mi-router-3g.dts
+@@ -9,7 +9,7 @@
+ 		led-failsafe = &led_status_red;
+ 		led-running = &led_status_blue;
+ 		led-upgrade = &led_status_yellow;
+-		label-mac-device = &gmac0;
++		label-mac-device = &ethernet;
+ 	};
+ 
+ 	leds {
+@@ -85,28 +85,19 @@
+ 	};
+ };
+ 
+-&gmac0 {
+-	mtd-mac-address = <&factory 0xe006>;
++&ethernet {
++	compatible = "mediatek,ralink-mt7621-eth";
++	mediatek,switch = <&gsw>;
++	mtd-mac-address = <&factory 0xe000>;
+ };
+ 
+ &switch0 {
+-	ports {
+-		port@1 {
+-			status = "okay";
+-			label = "wan";
+-			mtd-mac-address = <&factory 0xe000>;
+-		};
+-
+-		port@2 {
+-			status = "okay";
+-			label = "lan2";
+-		};
++	/delete-property/ compatible;
++	phy-mode = "rgmii";
++};
+ 
+-		port@3 {
+-			status = "okay";
+-			label = "lan1";
+-		};
+-	};
++&gsw {
++	compatible = "mediatek,ralink-mt7621-gsw";
+ };
+ 
+ &state_default {
+diff --git a/target/linux/ramips/mt7621/base-files/etc/board.d/02_network b/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
+index e167e8d68..60e28e1f6 100644
+--- a/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
++++ b/target/linux/ramips/mt7621/base-files/etc/board.d/02_network
+@@ -36,7 +36,6 @@ ramips_setup_interfaces()
+ 	jcg,q20|\
+ 	lenovo,newifi-d1|\
+ 	mikrotik,routerboard-m33g|\
+-	xiaomi,mi-router-3g|\
+ 	xiaomi,mi-router-3g-v2|\
+ 	xiaomi,mi-router-4|\
+ 	xiaomi,mi-router-4a-gigabit)
+@@ -81,6 +80,11 @@ ramips_setup_interfaces()
+ 	ubnt,edgerouter-x-sfp)
+ 		ucidef_set_interfaces_lan_wan "eth1 eth2 eth3 eth4 eth5" "eth0"
+ 		;;
++	xiaomi,mi-router-3g)
++		ucidef_add_switch "switch0" \
++			"2:lan:2" "3:lan:1" "1:wan" "6t@eth0"
++		ucidef_set_interface_lan "eth0.1 ra0 rai0"
++		;;
+ 	xiaomi,mi-router-ac2100|\
+ 	xiaomi,redmi-router-ac2100)
+ 		ucidef_add_switch "switch0" \
+@@ -129,6 +133,7 @@ ramips_setup_macs()
+ 		;;
+ 	d-team,newifi-d2|\
+ 	phicomm,k2p|\
++	xiaomi,mi-router-3g|\
+ 	xiaomi,mi-router-ac2100|\
+ 	xiaomi,redmi-router-ac2100)
+ 		lan_mac=$(cat /sys/class/net/eth0/address)
