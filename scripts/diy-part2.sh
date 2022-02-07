@@ -102,8 +102,8 @@ if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     echo "显示000-fix-k3screen.patch"
     cat package/custom/k3screenctrl_build/patches/000-fix-k3screen.patch
     echo "替换brcmfmac4366c-pcie.bin"
-    md5sum $GITHUB_WORKSPACE/config/K3/brcmfmac4366c-pcie_3.0.0.4.386.45987.bin
-    cp -af $GITHUB_WORKSPACE/config/K3/brcmfmac4366c-pcie_3.0.0.4.386.45987.bin package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
+    md5sum $GITHUB_WORKSPACE/config/K3/3.0.0.4.386.46065_brcmfmac4366c-pcie.bin
+    cp -af $GITHUB_WORKSPACE/config/K3/3.0.0.4.386.46065_brcmfmac4366c-pcie.bin package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     md5sum package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
