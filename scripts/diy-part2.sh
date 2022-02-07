@@ -93,14 +93,14 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     echo "删除lean/k3screenctrl"
     rm -rf package/lean/k3screenctrl
-    echo "增加Hill-98/luci-app-k3screenctrl"
-    git clone --depth 1 https://github.com/Hill-98/luci-app-k3screenctrl package/custom/luci-app-k3screenctrl
-    echo "增加Hill-98/openwrt-k3screenctrl"
-    git clone --depth 1 https://github.com/Hill-98/openwrt-k3screenctrl package/custom/openwrt-k3screenctrl
+    echo "增加lwz322/luci-app-k3screenctrl"
+    git clone --depth 1 https://github.com/lwz322/luci-app-k3screenctrl package/custom/luci-app-k3screenctrl
+    echo "增加lwz322/k3screenctrl_build"
+    git clone --depth 1 https://github.com/lwz322/k3screenctrl_build package/custom/k3screenctrl_build
     echo "复制config/K3/patches"
-    cp -af $GITHUB_WORKSPACE/config/K3/patches package/custom/openwrt-k3screenctrl/
+    cp -af $GITHUB_WORKSPACE/config/K3/patches package/custom/k3screenctrl_build/
     echo "显示000-fix-k3screen.patch"
-    cat package/custom/openwrt-k3screenctrl/patches/000-fix-k3screen.patch
+    cat package/custom/k3screenctrl_build/patches/000-fix-k3screen.patch
     echo "替换brcmfmac4366c-pcie.bin"
     md5sum $GITHUB_WORKSPACE/config/K3/brcmfmac4366c-pcie_3.0.0.4.386.45987.bin
     cp -af $GITHUB_WORKSPACE/config/K3/brcmfmac4366c-pcie_3.0.0.4.386.45987.bin package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
