@@ -65,6 +65,9 @@ git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall package/custom
 echo "增加vernesong/luci-app-openclash"
 git clone --depth 1 https://github.com/vernesong/OpenClash package/custom/OpenClash
 
+echo "增加Lienol/openwrt-package/luci-app-socat"
+git clone --depth 1 https://github.com/Lienol/openwrt-package Lienol/openwrt-package && cp -af Lienol/openwrt-package/luci-app-socat package/custom
+
 echo "修改DEFAULT_PACKAGES"
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 sed -i '/DEFAULT_PACKAGES.router/,/^ifneq/{s/luci-app-autoreboot//g;s/luci-app-unblockmusic//g;s/luci-app-accesscontrol//g}' include/target.mk
@@ -163,16 +166,6 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     sed -n '/GRUB_TITLE$/,/help$/p' config/Config-images.in
     sed -i "/GRUB_TITLE$/,/help$/{s|\"OpenWrt\"|\"OpenWrt PuXiongfei build $(date "+%Y.%m.%d")\"|}" config/Config-images.in
     sed -n '/GRUB_TITLE$/,/help$/p' config/Config-images.in
-
-    echo "修改QCOW2_IMAGES"
-    sed -n '/QCOW2_IMAGES$/,/config/p' config/Config-images.in
-    sed -i '/QCOW2_IMAGES$/a\\t\tdefault y' config/Config-images.in
-    sed -n '/QCOW2_IMAGES$/,/config/p' config/Config-images.in
-
-    echo "修改TARGET_IMAGES_GZIP"
-    sed -n '/TARGET_IMAGES_GZIP$/,/default/p' config/Config-images.in
-    sed -i '/TARGET_IMAGES_GZIP$/,/default/{s/default n/default y/}' config/Config-images.in
-    sed -n '/TARGET_IMAGES_GZIP$/,/default/p' config/Config-images.in
 fi
 if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
