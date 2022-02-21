@@ -46,9 +46,9 @@ sed -n '/KERNEL_BUILD_USER$/,/help$/p' config/Config-kernel.in
 sed -i '/KERNEL_BUILD_USER$/,/help$/{s/""/"PuXiongfei"/}' config/Config-kernel.in
 sed -n '/KERNEL_BUILD_USER$/,/help$/p' config/Config-kernel.in
 
-echo "删除luci/themes/luci-theme-argon"
-rm -rf luci/themes/luci-theme-argon
-ls -la luci/themes
+echo "删除feeds/luci/themes/luci-theme-argon"
+rm -rf feeds/luci/themes/luci-theme-argon
+ls -la feeds/luci/themes
 
 echo "增加jerrykuku/luci-theme-argon"
 git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/custom/luci-theme-argon
