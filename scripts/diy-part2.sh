@@ -68,7 +68,7 @@ git clone --depth 1 https://github.com/vernesong/OpenClash package/custom/OpenCl
 echo "修改DEFAULT_PACKAGES"
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 sed -i '/DEFAULT_PACKAGES.router/,/^ifneq/{s/luci-app-autoreboot//g;s/luci-app-unblockmusic//g;s/luci-app-accesscontrol//g}' include/target.mk
-sed -i '/DEFAULT_PACKAGES.router/a\\tautomount autosamba ddns-scripts_cloudflare.com-v4 iperf3 ipv6helper luci-app-argon-config luci-app-easymesh luci-app-ttyd luci-app-webadmin \\' include/target.mk
+sed -i '/DEFAULT_PACKAGES.router/a\\tautomount autosamba ddns-scripts_cloudflare.com-v4 iperf3 ipv6helper luci-app-argon-config luci-app-easymesh luci-app-socat luci-app-ttyd luci-app-webadmin \\' include/target.mk
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 
 if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
