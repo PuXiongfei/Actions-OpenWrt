@@ -51,7 +51,7 @@ rm -rf luci/themes/luci-theme-argon
 ls -la luci/themes
 
 echo "增加jerrykuku/luci-theme-argon"
-git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/lean/luci-theme-argon
+git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/custom/luci-theme-argon
 
 echo "增加jerrykuku/luci-app-argon-config"
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/custom/luci-app-argon-config
