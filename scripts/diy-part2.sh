@@ -46,8 +46,12 @@ sed -n '/KERNEL_BUILD_USER$/,/help$/p' config/Config-kernel.in
 sed -i '/KERNEL_BUILD_USER$/,/help$/{s/""/"PuXiongfei"/}' config/Config-kernel.in
 sed -n '/KERNEL_BUILD_USER$/,/help$/p' config/Config-kernel.in
 
-echo "替换jerrykuku/luci-theme-argon"
-rm -rf package/lean/luci-theme-argon && git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/lean/luci-theme-argon
+echo "删除luci/themes/luci-theme-argon"
+rm -rf luci/themes/luci-theme-argon
+ls -la luci/themes
+
+echo "增加jerrykuku/luci-theme-argon"
+git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/lean/luci-theme-argon
 
 echo "增加jerrykuku/luci-app-argon-config"
 git clone --depth=1 https://github.com/jerrykuku/luci-app-argon-config package/custom/luci-app-argon-config
