@@ -74,7 +74,7 @@ git clone --depth 1 https://github.com/Lienol/openwrt-package Lienol/openwrt-pac
 echo "修改DEFAULT_PACKAGES"
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 sed -i '/DEFAULT_PACKAGES.router/,/^ifneq/{s/luci-app-autoreboot//g;s/luci-app-unblockmusic//g;s/luci-app-accesscontrol//g}' include/target.mk
-sed -i '/DEFAULT_PACKAGES.router/a\\tautomount autosamba ddns-scripts_cloudflare.com-v4 iperf3 ipv6helper luci-app-argon-config luci-app-easymesh luci-app-socat luci-app-ttyd luci-app-webadmin nano \\' include/target.mk
+sed -i '/DEFAULT_PACKAGES.router/a\\tautomount autosamba cloudflared ddns-scripts_cloudflare.com-v4 iperf3 ipv6helper luci-app-argon-config luci-app-easymesh luci-app-socat luci-app-ttyd luci-app-webadmin nano \\' include/target.mk
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 
 if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
@@ -173,7 +173,7 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
-    sed -i '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/{/DEVICE_PACKAGES/s/$/& luci-app-wireguard luci-app-zerotier/}' target/linux/ramips/image/mt7620.mk
+    sed -i '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/{/DEVICE_PACKAGES/s/$/& luci-app-aria2 luci-app-frpc luci-app-frps luci-app-wireguard luci-app-zerotier/}' target/linux/ramips/image/mt7620.mk
     sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
 fi
 
