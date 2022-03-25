@@ -81,7 +81,7 @@ if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
     sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g}' target/linux/ramips/image/mt7621.mk
-    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/cloudflared tailscale luci-app-adguardhome luci-app-aria2 luci-app-frpc luci-app-frps luci-app-openclash luci-app-passwall luci-app-wireguard luci-app-zerotier \\/}' target/linux/ramips/image/mt7621.mk
+    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/tailscale luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-wireguard luci-app-zerotier \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
     echo "修改passwall默认值"
     sed -n '/INCLUDE_Shadowsocks_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
@@ -117,7 +117,7 @@ if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     md5sum package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
-    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm cloudflared tailscale luci-app-adguardhome luci-app-aria2 luci-app-frpc luci-app-frps luci-app-k3screenctrl luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard luci-app-zerotier/}' target/linux/bcm53xx/image/Makefile
+    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm tailscale luci-app-adguardhome luci-app-aria2 luci-app-k3screenctrl luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard luci-app-zerotier/}' target/linux/bcm53xx/image/Makefile
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
     echo "修改Makefile只编译K3"
     sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
@@ -129,7 +129,7 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
-    sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/cloudflared tailscale luci-app-adguardhome luci-app-aria2 luci-app-frpc luci-app-frps luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard luci-app-zerotier \\/}' target/linux/ramips/image/mt7621.mk
+    sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/tailscale luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-rclone luci-app-wireguard luci-app-zerotier \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
     echo "修改passwall默认值"
     sed -n '/INCLUDE_Shadowsocks_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
@@ -162,7 +162,7 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     echo "修改target/linux/x86/Makefile"
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
     sed -i '/DEFAULT_PACKAGES/,/BuildTarget/{s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-xlnetacc//g}' target/linux/x86/Makefile
-    sed -i '/DEFAULT_PACKAGES/a\cloudflared tailscale luci-app-adguardhome luci-app-aria2 luci-app-frpc luci-app-frps luci-app-docker luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone \\' target/linux/x86/Makefile
+    sed -i '/DEFAULT_PACKAGES/a\tailscale luci-app-adguardhome luci-app-aria2 luci-app-docker luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone \\' target/linux/x86/Makefile
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
 
     echo "修改GRUB_TITLE"
@@ -173,7 +173,7 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
-    sed -i '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/{/DEVICE_PACKAGES/s/$/& tailscale luci-app-wireguard luci-app-zerotier/}' target/linux/ramips/image/mt7620.mk
+    sed -i '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/{/DEVICE_PACKAGES/s/$/& luci-app-wireguard luci-app-zerotier/}' target/linux/ramips/image/mt7620.mk
     sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
 fi
 
