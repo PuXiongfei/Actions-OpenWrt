@@ -10,10 +10,10 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
-# Modify default IP
-echo "修改默认IP为192.168.26.26"
-sed -i 's/192.168.1.1/192.168.26.26/g' package/base-files/files/bin/config_generate
-sed -n '/192.168./p' package/base-files/files/bin/config_generate
+echo "修改默认IP为10.26.26.1"
+sed -i 's/192.168.1.1/10.26.26.1/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168./10.26./g' package/base-files/files/bin/config_generate
+sed -n '/10.26./p' package/base-files/files/bin/config_generate
 
 echo "修改hostname为$CONFIG_FILE_DEVICE"
 sed -i "s|OpenWrt|$CONFIG_FILE_DEVICE|g" package/base-files/files/bin/config_generate
@@ -48,7 +48,7 @@ sed -n '/KERNEL_BUILD_USER$/,/help$/p' config/Config-kernel.in
 
 echo "删除feeds/luci/themes/luci-theme-argon"
 rm -rf feeds/luci/themes/luci-theme-argon
-ls -la feeds/luci/themes
+ls -l feeds/luci/themes
 
 echo "增加jerrykuku/luci-theme-argon"
 git clone --depth=1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/custom/luci-theme-argon
