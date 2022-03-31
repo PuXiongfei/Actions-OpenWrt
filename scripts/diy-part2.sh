@@ -203,9 +203,3 @@ fi
 
 echo "查看package/custom"
 ls -1 package/custom
-
-echo "./scripts/feeds update -a"
-./scripts/feeds update -a
-
-echo "./scripts/feeds install -a"
-./scripts/feeds install -a
