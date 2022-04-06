@@ -65,6 +65,24 @@ git clone --depth 1 -b packages https://github.com/xiaorouji/openwrt-passwall pa
 echo "增加xiaorouji/luci-app-passwall luci"
 git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall package/custom/openwrt-passwall/luci
 
+echo "修改luci-app-passwall默认值"
+echo "当前："
+cat package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include Shadowsocks Libev Client/,/default/{s/default.*/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include Shadowsocks Libev Server/,/default/{s/default.*/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include Shadowsocks Rust Client/,/default/{s/default.*/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include ShadowsocksR Libev Client/,/default/{s/default.*/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include ShadowsocksR Libev Server/,/default/{s/default.*/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include Simple-Obfs/,/default/{s/default.*/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include Trojan-GO/,/default/{s/default.*/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include Trojan-Plus/,/default/{s/default n.*/default y/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include V2ray/,/default/{s/default.*/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include V2ray-Plugin/,/default/{s/default.*/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include Xray/,/default/{s/default.*/default y/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+sed -i '/Include Xray-Plugin/,/default/{s/default.*/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+echo "修改后："
+cat package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
+
 echo "增加vernesong/luci-app-openclash"
 git clone --depth 1 https://github.com/vernesong/OpenClash package/custom/OpenClash
 
@@ -83,22 +101,6 @@ if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g}' target/linux/ramips/image/mt7621.mk
     sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
-    echo "修改passwall默认值"
-    sed -n '/INCLUDE_Shadowsocks_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -i '/INCLUDE_Shadowsocks_Libev_Client$/,/default/{s/default y/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -n '/INCLUDE_Shadowsocks_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-
-    sed -n '/INCLUDE_ShadowsocksR_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -i '/INCLUDE_ShadowsocksR_Libev_Client$/,/default/{s/default y/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -n '/INCLUDE_ShadowsocksR_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-
-    sed -n '/INCLUDE_Simple_Obfs$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -i '/INCLUDE_Simple_Obfs$/,/default/{s/default y/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -n '/INCLUDE_Simple_Obfs$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-
-    sed -n '/INCLUDE_Xray$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -i '/INCLUDE_Xray$/,/default/{/default/s/$/&||mipsel/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -n '/INCLUDE_Xray$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
 fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     echo "删除lean/k3screenctrl"
@@ -139,7 +141,8 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     sed -i '/DEFAULT_PACKAGES/s/$/& kmod-brcmfmac kmod-brcmutil kmod-cfg80211 kmod-mac80211/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& wpa-cli wpad-openssl/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& iw/' target/linux/armvirt/Makefile
-    sed -i '/DEFAULT_PACKAGES/s/$/& kmod-bluetooth luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/' target/linux/armvirt/Makefile
+    sed -i '/DEFAULT_PACKAGES/s/$/& kmod-bluetooth kmod-sound-core kmod-usb-audio kmod-usb-net kmod-usb-net-asix-ax88179 kmod-usb-net-rtl8150 kmod-usb-net-rtl8152-vendor/' target/linux/armvirt/Makefile
+    sed -i '/DEFAULT_PACKAGES/s/$/& luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/' target/linux/armvirt/Makefile
     sed -n '/DEFAULT_PACKAGES/p' target/linux/armvirt/Makefile
     echo "修改BRCMFMAC_SDIO"
     sed -n '/config BRCMFMAC_SDIO/,/help/p' package/kernel/mac80211/broadcom.mk
@@ -155,22 +158,7 @@ if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
     sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
-    echo "修改passwall默认值"
-    sed -n '/INCLUDE_Shadowsocks_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -i '/INCLUDE_Shadowsocks_Libev_Client$/,/default/{s/default y/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -n '/INCLUDE_Shadowsocks_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
 
-    sed -n '/INCLUDE_ShadowsocksR_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -i '/INCLUDE_ShadowsocksR_Libev_Client$/,/default/{s/default y/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -n '/INCLUDE_ShadowsocksR_Libev_Client$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-
-    sed -n '/INCLUDE_Simple_Obfs$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -i '/INCLUDE_Simple_Obfs$/,/default/{s/default y/default n/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -n '/INCLUDE_Simple_Obfs$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-
-    sed -n '/INCLUDE_Xray$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -i '/INCLUDE_Xray$/,/default/{/default/s/$/&||mipsel/}' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
-    sed -n '/INCLUDE_Xray$/,/default/p' package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
     if [ -e $GITHUB_WORKSPACE/config/R3G_switch.patch ]; then
         echo "显示R3G_switch.patch"
         cat $GITHUB_WORKSPACE/config/R3G_switch.patch
