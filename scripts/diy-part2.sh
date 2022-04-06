@@ -145,13 +145,25 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     sed -i '/DEFAULT_PACKAGES/s/$/& luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/' target/linux/armvirt/Makefile
     sed -n '/DEFAULT_PACKAGES/p' target/linux/armvirt/Makefile
     echo "修改BRCMFMAC_SDIO"
-    sed -n '/config BRCMFMAC_SDIO/,/help/p' package/kernel/mac80211/broadcom.mk
-    sed -i '/config BRCMFMAC_SDIO/,/help/{s/default n/default y/}' package/kernel/mac80211/broadcom.mk
-    sed -n '/config BRCMFMAC_SDIO/,/help/p' package/kernel/mac80211/broadcom.mk
+    sed -n '/config BRCMFMAC_SDIO/,/default.*/p' package/kernel/mac80211/broadcom.mk
+    sed -i '/config BRCMFMAC_SDIO/,/default.*/{/default.*/i\\t\tdefault y if TARGET_armvirt/}' package/kernel/mac80211/broadcom.mk
+    sed -n '/config BRCMFMAC_SDIO/,/default.*/p' package/kernel/mac80211/broadcom.mk
     echo "修改BTRFS_PROGS_ZSTD"
-    sed -n '/config BTRFS_PROGS_ZSTD/,/help/p' feeds/packages/utils/btrfs-progs/Config.in
-    sed -i '/config BTRFS_PROGS_ZSTD/,/help/{s/default n/default y/}' feeds/packages/utils/btrfs-progs/Config.in
-    sed -n '/config BTRFS_PROGS_ZSTD/,/help/p' feeds/packages/utils/btrfs-progs/Config.in
+    sed -n '/config BTRFS_PROGS_ZSTD/,/default.*/p' feeds/packages/utils/btrfs-progs/Config.in
+    sed -i '/config BTRFS_PROGS_ZSTD/,/default.*/{/default.*/i\\t\tdefault y if TARGET_armvirt/}' feeds/packages/utils/btrfs-progs/Config.in
+    sed -n '/config BTRFS_PROGS_ZSTD/,/default.*/p' feeds/packages/utils/btrfs-progs/Config.in
+    echo "修改TARGET_ROOTFS_INITRAMFS"
+    sed -n '/menuconfig TARGET_ROOTFS_INITRAMFS/,/default.*/p' config/Config-images.in
+    sed -i '/menuconfig TARGET_ROOTFS_INITRAMFS/,/default.*/{/default.*/i\\t\tdefault n if TARGET_armvirt/}' config/Config-images.in
+    sed -n '/menuconfig TARGET_ROOTFS_INITRAMFS/,/default.*/p' config/Config-images.in
+    echo "修改TARGET_ROOTFS_CPIOGZ"
+    sed -n '/config TARGET_ROOTFS_CPIOGZ/,/default.*/p' config/Config-images.in
+    sed -i '/config TARGET_ROOTFS_CPIOGZ/,/default.*/{/default.*/i\\t\tdefault n if TARGET_armvirt/}' config/Config-images.in
+    sed -n '/config TARGET_ROOTFS_CPIOGZ/,/default.*/p' config/Config-images.in
+    echo "修改TARGET_ROOTFS_EXT4FS"
+    sed -n '/menuconfig TARGET_ROOTFS_EXT4FS/,/default.*/p' config/Config-images.in
+    sed -i '/menuconfig TARGET_ROOTFS_EXT4FS/,/default.*/{/default.*/i\\t\tdefault n if TARGET_armvirt/}' config/Config-images.in
+    sed -n '/menuconfig TARGET_ROOTFS_EXT4FS/,/default.*/p' config/Config-images.in
 fi
 if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
