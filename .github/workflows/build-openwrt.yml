@@ -181,6 +181,11 @@ jobs:
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
 
+      - name: Show .config
+        run: |
+          cd openwrt
+          cat .config
+
       - name: Compile the firmware
         id: compile
         run: |
@@ -371,6 +376,11 @@ jobs:
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
 
+      - name: Show .config
+        run: |
+          cd openwrt
+          cat .config
+
       - name: Compile the firmware
         id: compile
         run: |
@@ -560,6 +570,11 @@ jobs:
           make download -j8
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
+
+      - name: Show .config
+        run: |
+          cd openwrt
+          cat .config
 
       - name: Compile the firmware
         id: compile
@@ -760,6 +775,11 @@ jobs:
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
 
+      - name: Show .config
+        run: |
+          cd openwrt
+          cat .config
+
       - name: Compile the firmware
         id: compile
         run: |
@@ -950,6 +970,11 @@ jobs:
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
 
+      - name: Show .config
+        run: |
+          cd openwrt
+          cat .config
+
       - name: Compile the firmware
         id: compile
         run: |
@@ -1139,6 +1164,11 @@ jobs:
           make download -j8
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
+
+      - name: Show .config
+        run: |
+          cd openwrt
+          cat .config
 
       - name: Compile the firmware
         id: compile
