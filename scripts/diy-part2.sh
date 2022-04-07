@@ -145,12 +145,12 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     sed -i '/DEFAULT_PACKAGES/s/$/& docker-compose luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/' target/linux/armvirt/Makefile
     sed -n '/DEFAULT_PACKAGES/p' target/linux/armvirt/Makefile
     echo "修改BRCMFMAC_SDIO"
-    sed -n '/config BRCMFMAC_SDIO/,/help/p' package/kernel/mac80211/broadcom.mk
-    sed -i '/config BRCMFMAC_SDIO/,/help/{s/default.*/default y if TARGET_armvirt\n\t\t&/}' package/kernel/mac80211/broadcom.mk
-    sed -n '/config BRCMFMAC_SDIO/,/help/p' package/kernel/mac80211/broadcom.mk
+    sed -n '/config BRCMFMAC_SDIO/,/default/p' package/kernel/mac80211/broadcom.mk
+    sed -i '/config BRCMFMAC_SDIO/,/default/{s/default.*/default y if TARGET_armvirt\n\t\t&/}' package/kernel/mac80211/broadcom.mk
+    sed -n '/config BRCMFMAC_SDIO/,/default/p' package/kernel/mac80211/broadcom.mk
     echo "修改BTRFS_PROGS_ZSTD"
     sed -n '/config BTRFS_PROGS_ZSTD/,/help/p' feeds/packages/utils/btrfs-progs/Config.in
-    sed -i '/config BTRFS_PROGS_ZSTD/,/help/{s/default.*/default y if TARGET_armvirt\n\t\t&/}' feeds/packages/utils/btrfs-progs/Config.in
+    sed -i '/config BTRFS_PROGS_ZSTD/,/help/{s/default.*/default y if TARGET_armvirt\n\t&/}' feeds/packages/utils/btrfs-progs/Config.in
     sed -n '/config BTRFS_PROGS_ZSTD/,/help/p' feeds/packages/utils/btrfs-progs/Config.in
     echo "修改TARGET_ROOTFS_INITRAMFS"
     sed -n '/menuconfig TARGET_ROOTFS_INITRAMFS/,/help/p' config/Config-images.in
