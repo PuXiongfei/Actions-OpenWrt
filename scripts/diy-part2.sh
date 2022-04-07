@@ -148,6 +148,14 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     sed -n '/config BRCMFMAC_SDIO/,/default.*/p' package/kernel/mac80211/broadcom.mk
     sed -i '/config BRCMFMAC_SDIO/,/default.*/{s/default.*/default y if TARGET_armvirt\n\t\t&/}' package/kernel/mac80211/broadcom.mk
     sed -n '/config BRCMFMAC_SDIO/,/default.*/p' package/kernel/mac80211/broadcom.mk
+    echo "修改BRCMFMAC_USB"
+    sed -n '/config BRCMFMAC_USB/,/default.*/p' package/kernel/mac80211/broadcom.mk
+    sed -i '/config BRCMFMAC_USB/,/default.*/{s/default.*/default n if TARGET_armvirt\n\t\t&/}' package/kernel/mac80211/broadcom.mk
+    sed -n '/config BRCMFMAC_USB/,/default.*/p' package/kernel/mac80211/broadcom.mk
+    echo "修改BRCMFMAC_PCIE"
+    sed -n '/config BRCMFMAC_PCIE/,/default.*/p' package/kernel/mac80211/broadcom.mk
+    sed -i '/config BRCMFMAC_PCIE/,/default.*/{s/default.*/default n if TARGET_armvirt\n\t\t&/}' package/kernel/mac80211/broadcom.mk
+    sed -n '/config BRCMFMAC_PCIE/,/default.*/p' package/kernel/mac80211/broadcom.mk
     echo "修改BTRFS_PROGS_ZSTD"
     sed -n '/config BTRFS_PROGS_ZSTD/,/default.*/p' feeds/packages/utils/btrfs-progs/Config.in
     sed -i '/config BTRFS_PROGS_ZSTD/,/default.*/{s/default.*/default y if TARGET_armvirt\n\t&/}' feeds/packages/utils/btrfs-progs/Config.in
