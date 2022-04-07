@@ -129,6 +129,9 @@ if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     sed -n '/phicomm,k3)/,/;;/p' target/linux/bcm53xx/base-files/etc/board.d/02_network
 fi
 if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
+    echo "增加ophub/luci-app-amlogic"
+    git clone --depth 1 https://github.com/ophub/luci-app-amlogic package/custom/luci-app-amlogic
+
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/DEFAULT_PACKAGES/p' target/linux/armvirt/Makefile
     sed -i 's/DEFAULT_PACKAGES.*/DEFAULT_PACKAGES +=/' target/linux/armvirt/Makefile
@@ -141,21 +144,29 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     sed -i '/DEFAULT_PACKAGES/s/$/& kmod-brcmfmac kmod-brcmutil kmod-cfg80211 kmod-mac80211/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& wpa-cli wpad-openssl/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& iw/' target/linux/armvirt/Makefile
-    sed -i '/DEFAULT_PACKAGES/s/$/& kmod-bluetooth kmod-mmc kmod-sound-core kmod-usb-audio kmod-usb-net kmod-usb-net-asix-ax88179 kmod-usb-net-rtl8150 kmod-usb-net-rtl8152-vendor/' target/linux/armvirt/Makefile
-    sed -i '/DEFAULT_PACKAGES/s/$/& docker-compose luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/' target/linux/armvirt/Makefile
+    sed -i '/DEFAULT_PACKAGES/s/$/& kmod-usb-hid kmod-mmc usbutils pciutils kmod-usb-audio kmod-usb-net kmod-usb-net-asix-ax88179 kmod-usb-net-rtl8150 kmod-usb-net-rtl8152-vendor kmod-sound-core kmod-bluetooth bluez-utils bluez-utils-extra bluez-daemon alsa-utils/' target/linux/armvirt/Makefile
+    sed -i '/DEFAULT_PACKAGES/s/$/& docker-compose luci-app-adguardhome luci-app-amlogic luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/' target/linux/armvirt/Makefile
     sed -n '/DEFAULT_PACKAGES/p' target/linux/armvirt/Makefile
+    echo "修改TESTING_KERNEL"
+    sed -n '/config TESTING_KERNEL/,/default/p' config/Config-build.in
+    sed -i '/config TESTING_KERNEL/,/default/{s/default.*/default y if TARGET_armvirt\n\t\t&/}' config/Config-build.in
+    sed -n '/config TESTING_KERNEL/,/default/p' config/Config-build.in
+    echo "修改config-5.4 CONFIG_BRCMFMAC"
+    sed -n '/CONFIG_BRCMFMAC/p' target/linux/generic/config-5.4
+    sed -i '/CONFIG_BRCMFMAC/d' target/linux/generic/config-5.4
+    sed -n '/CONFIG_BRCMFMAC/p' target/linux/generic/config-5.4
+    echo "修改config-5.10 CONFIG_BRCMFMAC"
+    sed -n '/CONFIG_BRCMFMAC/p' target/linux/generic/config-5.10
+    sed -i '/CONFIG_BRCMFMAC/d' target/linux/generic/config-5.10
+    sed -n '/CONFIG_BRCMFMAC/p' target/linux/generic/config-5.10
+    echo "修改config-5.15 CONFIG_BRCMFMAC"
+    sed -n '/CONFIG_BRCMFMAC/p' target/linux/generic/config-5.15
+    sed -i '/CONFIG_BRCMFMAC/d' target/linux/generic/config-5.15
+    sed -n '/CONFIG_BRCMFMAC/p' target/linux/generic/config-5.15
     echo "修改BRCMFMAC_SDIO"
     sed -n '/config BRCMFMAC_SDIO/,/default/p' package/kernel/mac80211/broadcom.mk
     sed -i '/config BRCMFMAC_SDIO/,/default/{s/default.*/default y if TARGET_armvirt\n\t\t&/}' package/kernel/mac80211/broadcom.mk
     sed -n '/config BRCMFMAC_SDIO/,/default/p' package/kernel/mac80211/broadcom.mk
-    echo "修改BRCMFMAC_USB"
-    sed -n '/config BRCMFMAC_USB/,/default/p' package/kernel/mac80211/broadcom.mk
-    sed -i '/config BRCMFMAC_USB/,/default/{s/default.*/default n/}' package/kernel/mac80211/broadcom.mk
-    sed -n '/config BRCMFMAC_USB/,/default/p' package/kernel/mac80211/broadcom.mk
-    echo "修改BRCMFMAC_PCIE"
-    sed -n '/config BRCMFMAC_PCIE/,/default/p' package/kernel/mac80211/broadcom.mk
-    sed -i '/config BRCMFMAC_PCIE/,/default/{s/default.*/default n/}' package/kernel/mac80211/broadcom.mk
-    sed -n '/config BRCMFMAC_PCIE/,/default/p' package/kernel/mac80211/broadcom.mk
     echo "修改BTRFS_PROGS_ZSTD"
     sed -n '/config BTRFS_PROGS_ZSTD/,/help/p' feeds/packages/utils/btrfs-progs/Config.in
     sed -i '/config BTRFS_PROGS_ZSTD/,/help/{s/default.*/default y if TARGET_armvirt\n\t&/}' feeds/packages/utils/btrfs-progs/Config.in
