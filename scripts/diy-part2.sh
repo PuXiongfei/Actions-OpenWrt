@@ -141,16 +141,16 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     sed -i '/DEFAULT_PACKAGES/s/$/& kmod-brcmfmac kmod-brcmutil kmod-cfg80211 kmod-mac80211/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& wpa-cli wpad-openssl/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& iw/' target/linux/armvirt/Makefile
-    sed -i '/DEFAULT_PACKAGES/s/$/& kmod-bluetooth kmod-sound-core kmod-usb-audio kmod-usb-net kmod-usb-net-asix-ax88179 kmod-usb-net-rtl8150 kmod-usb-net-rtl8152-vendor/' target/linux/armvirt/Makefile
+    sed -i '/DEFAULT_PACKAGES/s/$/& kmod-bluetooth kmod-mmc kmod-sound-core kmod-usb-audio kmod-usb-net kmod-usb-net-asix-ax88179 kmod-usb-net-rtl8150 kmod-usb-net-rtl8152-vendor/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& docker-compose luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/' target/linux/armvirt/Makefile
     sed -n '/DEFAULT_PACKAGES/p' target/linux/armvirt/Makefile
     echo "修改BRCMFMAC_SDIO"
     sed -n '/config BRCMFMAC_SDIO/,/help/p' package/kernel/mac80211/broadcom.mk
-    sed -i '/config BRCMFMAC_SDIO/,/help/{s/default n/default y/}' package/kernel/mac80211/broadcom.mk
+    sed -i '/config BRCMFMAC_SDIO/,/help/{s/default.*/default y if TARGET_armvirt\n\t\t&/}' package/kernel/mac80211/broadcom.mk
     sed -n '/config BRCMFMAC_SDIO/,/help/p' package/kernel/mac80211/broadcom.mk
     echo "修改BTRFS_PROGS_ZSTD"
     sed -n '/config BTRFS_PROGS_ZSTD/,/help/p' feeds/packages/utils/btrfs-progs/Config.in
-    sed -i '/config BTRFS_PROGS_ZSTD/,/help/{s/default n/default y/}' feeds/packages/utils/btrfs-progs/Config.in
+    sed -i '/config BTRFS_PROGS_ZSTD/,/help/{s/default.*/default y if TARGET_armvirt\n\t\t&/}' feeds/packages/utils/btrfs-progs/Config.in
     sed -n '/config BTRFS_PROGS_ZSTD/,/help/p' feeds/packages/utils/btrfs-progs/Config.in
     echo "修改TARGET_ROOTFS_INITRAMFS"
     sed -n '/menuconfig TARGET_ROOTFS_INITRAMFS/,/help/p' config/Config-images.in
