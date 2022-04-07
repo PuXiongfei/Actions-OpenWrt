@@ -148,14 +148,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -164,14 +164,14 @@ jobs:
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@v2
-        if: steps.organize.outputs.status == 'success' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && !cancelled()
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Upload firmware to cowtransfer
         id: cowtransfer
-        if: steps.organize.outputs.status == 'success' && ${{ github.event.inputs.uploadCowtransfer }} == 'true' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && ${{ github.event.inputs.uploadCowtransfer }} == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -180,7 +180,7 @@ jobs:
 
       - name: Upload firmware to WeTransfer
         id: wetransfer
-        if: steps.organize.outputs.status == 'success' && ${{ github.event.inputs.uploadWetransfer }} == 'true' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && ${{ github.event.inputs.uploadWetransfer }} == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -297,14 +297,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -313,14 +313,14 @@ jobs:
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@v2
-        if: steps.organize.outputs.status == 'success' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && !cancelled()
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Upload firmware to cowtransfer
         id: cowtransfer
-        if: steps.organize.outputs.status == 'success' && ${{ github.event.inputs.uploadCowtransfer }} == 'true' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && ${{ github.event.inputs.uploadCowtransfer }} == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -329,7 +329,7 @@ jobs:
 
       - name: Upload firmware to WeTransfer
         id: wetransfer
-        if: steps.organize.outputs.status == 'success' && ${{ github.event.inputs.uploadWetransfer }} == 'true' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && ${{ github.event.inputs.uploadWetransfer }} == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -446,14 +446,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
         run: |
           ls -l
           cd openwrt/bin/targets/*/*
@@ -464,7 +464,7 @@ jobs:
 
       - name: Package Armvirt as OpenWrt
         uses: unifreq/openwrt_packit@master
-        if: steps.organize.outputs.status == 'success' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && !cancelled()
         env:
           OPENWRT_ARMVIRT: ${{ env.FIRMWARE }}
           KERNEL_VERSION_NAME: 5.4.188
@@ -606,14 +606,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -622,14 +622,14 @@ jobs:
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@v2
-        if: steps.organize.outputs.status == 'success' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && !cancelled()
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Upload firmware to cowtransfer
         id: cowtransfer
-        if: steps.organize.outputs.status == 'success' && ${{ github.event.inputs.uploadCowtransfer }} == 'true' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && ${{ github.event.inputs.uploadCowtransfer }} == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -638,7 +638,7 @@ jobs:
 
       - name: Upload firmware to WeTransfer
         id: wetransfer
-        if: steps.organize.outputs.status == 'success' && ${{ github.event.inputs.uploadWetransfer }} == 'true' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && ${{ github.event.inputs.uploadWetransfer }} == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -755,14 +755,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -771,14 +771,14 @@ jobs:
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@v2
-        if: steps.organize.outputs.status == 'success' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && !cancelled()
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Upload firmware to cowtransfer
         id: cowtransfer
-        if: steps.organize.outputs.status == 'success' && ${{ github.event.inputs.uploadCowtransfer }} == 'true' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && ${{ github.event.inputs.uploadCowtransfer }} == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -787,7 +787,7 @@ jobs:
 
       - name: Upload firmware to WeTransfer
         id: wetransfer
-        if: steps.organize.outputs.status == 'success' && ${{ github.event.inputs.uploadWetransfer }} == 'true' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && ${{ github.event.inputs.uploadWetransfer }} == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
@@ -904,14 +904,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadBinDir }} == 'true' && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: steps.compile.outputs.status == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
+        if: ${{ steps.compile.outputs.status }} == 'success' && ${{ github.event.inputs.uploadFirmware }} == 'true' && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -920,14 +920,14 @@ jobs:
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@v2
-        if: steps.organize.outputs.status == 'success' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && !cancelled()
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Upload firmware to cowtransfer
         id: cowtransfer
-        if: steps.organize.outputs.status == 'success' && ${{ github.event.inputs.uploadCowtransfer }} == 'true' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && ${{ github.event.inputs.uploadCowtransfer }} == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -936,7 +936,7 @@ jobs:
 
       - name: Upload firmware to WeTransfer
         id: wetransfer
-        if: steps.organize.outputs.status == 'success' && ${{ github.event.inputs.uploadWetransfer }} == 'true' && !cancelled()
+        if: ${{ steps.organize.outputs.status }} == 'success' && ${{ github.event.inputs.uploadWetransfer }} == 'true' && !cancelled()
         run: |
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
