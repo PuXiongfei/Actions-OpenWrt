@@ -147,43 +147,17 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     sed -i '/DEFAULT_PACKAGES/s/$/& kmod-usb-hid kmod-mmc usbutils pciutils kmod-usb-audio kmod-usb-net kmod-usb-net-asix-ax88179 kmod-usb-net-rtl8150 kmod-usb-net-rtl8152-vendor kmod-sound-core kmod-bluetooth bluez-utils bluez-utils-extra bluez-daemon alsa-utils/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& docker-compose luci-app-adguardhome luci-app-amlogic luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/' target/linux/armvirt/Makefile
     sed -n '/DEFAULT_PACKAGES/p' target/linux/armvirt/Makefile
-    echo "修改TESTING_KERNEL"
-    sed -n '/config TESTING_KERNEL/,/default/p' config/Config-build.in
-    sed -i '/config TESTING_KERNEL/,/default/{s/default.*/default y if TARGET_armvirt\n\t\t&/}' config/Config-build.in
-    sed -n '/config TESTING_KERNEL/,/default/p' config/Config-build.in
-    echo "修改BRCMFMAC_SDIO"
-    sed -n '/config BRCMFMAC_SDIO/,/help/p' package/kernel/mac80211/broadcom.mk
-    sed -i '/config BRCMFMAC_SDIO/,/help/{/default y/d}' package/kernel/mac80211/broadcom.mk
-    sed -i '/config BRCMFMAC_SDIO/,/help/{s/default n/default y/}' package/kernel/mac80211/broadcom.mk
-    sed -n '/config BRCMFMAC_SDIO/,/help/p' package/kernel/mac80211/broadcom.mk
-    echo "修改BRCMFMAC_USB"
-    sed -n '/config BRCMFMAC_USB/,/help/p' package/kernel/mac80211/broadcom.mk
-    sed -i '/config BRCMFMAC_USB/,/help/{s/default y/default n/}' package/kernel/mac80211/broadcom.mk
-    sed -n '/config BRCMFMAC_USB/,/help/p' package/kernel/mac80211/broadcom.mk
-    echo "修改BRCMFMAC_PCIE"
-    sed -n '/config BRCMFMAC_PCIE/,/help/p' package/kernel/mac80211/broadcom.mk
-    sed -i '/config BRCMFMAC_PCIE/,/help/{s/default y/default n/}' package/kernel/mac80211/broadcom.mk
-    sed -n '/config BRCMFMAC_PCIE/,/help/p' package/kernel/mac80211/broadcom.mk
-    echo "修改BTRFS_PROGS_ZSTD"
-    sed -n '/config BTRFS_PROGS_ZSTD/,/help/p' feeds/packages/utils/btrfs-progs/Config.in
-    sed -i '/config BTRFS_PROGS_ZSTD/,/help/{s/default.*/default y if TARGET_armvirt\n\t&/}' feeds/packages/utils/btrfs-progs/Config.in
-    sed -n '/config BTRFS_PROGS_ZSTD/,/help/p' feeds/packages/utils/btrfs-progs/Config.in
-    echo "修改TARGET_ROOTFS_INITRAMFS"
-    sed -n '/menuconfig TARGET_ROOTFS_INITRAMFS/,/help/p' config/Config-images.in
-    sed -i '/menuconfig TARGET_ROOTFS_INITRAMFS/,/help/{s/default.*/default n if TARGET_armvirt\n\t\t&/}' config/Config-images.in
-    sed -n '/menuconfig TARGET_ROOTFS_INITRAMFS/,/help/p' config/Config-images.in
-    echo "修改TARGET_ROOTFS_CPIOGZ"
-    sed -n '/config TARGET_ROOTFS_CPIOGZ/,/help/p' config/Config-images.in
-    sed -i '/config TARGET_ROOTFS_CPIOGZ/,/help/{s/default.*/default n if TARGET_armvirt\n\t\t&/}' config/Config-images.in
-    sed -n '/config TARGET_ROOTFS_CPIOGZ/,/help/p' config/Config-images.in
-    echo "修改TARGET_ROOTFS_EXT4FS"
-    sed -n '/menuconfig TARGET_ROOTFS_EXT4FS/,/help/p' config/Config-images.in
-    sed -i '/menuconfig TARGET_ROOTFS_EXT4FS/,/help/{s/default.*/default n if TARGET_armvirt\n\t\t&/}' config/Config-images.in
-    sed -n '/menuconfig TARGET_ROOTFS_EXT4FS/,/help/p' config/Config-images.in
-    echo "修改TARGET_ROOTFS_SQUASHFS"
-    sed -n '/menuconfig TARGET_ROOTFS_SQUASHFS/,/help/p' config/Config-images.in
-    sed -i '/menuconfig TARGET_ROOTFS_SQUASHFS/,/help/{s/default.*/default n if TARGET_armvirt\n\t\t&/}' config/Config-images.in
-    sed -n '/menuconfig TARGET_ROOTFS_SQUASHFS/,/help/p' config/Config-images.in
+    echo "修改.config"
+    echo "CONFIG_TESTING_KERNEL=y" >>.config
+    echo "CONFIG_BRCMFMAC_SDIO=y" >>.config
+    echo "# CONFIG_BRCMFMAC_USB is not set" >>.config
+    echo "# CONFIG_BRCMFMAC_PCIE is not set" >>.config
+    echo "CONFIG_BTRFS_PROGS_ZSTD=y" >>.config
+    echo "# CONFIG_TARGET_ROOTFS_INITRAMFS is not set" >>.config
+    echo "# CONFIG_TARGET_ROOTFS_CPIOGZ is not set" >>.config
+    echo "# CONFIG_TARGET_ROOTFS_EXT4FS is not set" >>.config
+    echo "# CONFIG_TARGET_ROOTFS_SQUASHFS is not set" >>.config
+    cat .config
 fi
 if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
