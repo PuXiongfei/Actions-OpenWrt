@@ -11,7 +11,14 @@
 name: Build OpenWrt
 
 env:
+  REPO_URL: coolsnowwolf/lede
+  REPO_BRANCH: master
   FEEDS_CONF: config/feeds.conf.default
+  DIY_P1_SH: scripts/diy-part1.sh
+  DIY_P2_SH: scripts/diy-part2.sh
+  UPLOAD_BIN_DIR: false
+  UPLOAD_FIRMWARE: true
+  UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
 
 on:
@@ -56,6 +63,42 @@ jobs:
         run: |
           echo "CONFIG_FILE=config/${{ github.job }}.config" >> $GITHUB_ENV
 
+          tempValue=${{ github.event.inputs.repository }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_URL }}" ]]; then
+            echo "REPO_URL=${{ env.REPO_URL }} set value ${{ tempValue }}"
+            echo "REPO_URL=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.ref }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_BRANCH }}" ]]; then
+            echo "REPO_BRANCH=${{ env.REPO_BRANCH }} set value ${{ tempValue }}"
+            echo "REPO_BRANCH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.beforeFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P1_SH }}" ]]; then
+            echo "DIY_P1_SH=${{ env.DIY_P1_SH }} set value ${{ tempValue }}"
+            echo "DIY_P1_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.afterFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P2_SH }}" ]]; then
+            echo "DIY_P2_SH=${{ env.DIY_P2_SH }} set value ${{ tempValue }}"
+            echo "DIY_P2_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadBinDir }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_BIN_DIR }}" ]]; then
+            echo "UPLOAD_BIN_DIR=${{ env.UPLOAD_BIN_DIR }} set value ${{ tempValue }}"
+            echo "UPLOAD_BIN_DIR=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadFirmware }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_FIRMWARE }}" ]]; then
+            echo "UPLOAD_FIRMWARE=${{ env.UPLOAD_FIRMWARE }} set value ${{ tempValue }}"
+            echo "UPLOAD_FIRMWARE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadRelease }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_RELEASE }}" ]]; then
+            echo "UPLOAD_RELEASE=${{ env.UPLOAD_RELEASE }} set value ${{ tempValue }}"
+            echo "UPLOAD_RELEASE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
@@ -71,8 +114,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: openwrt
-          repository: ${{ github.event.inputs.repository }}
-          ref: ${{ github.event.inputs.ref }}
+          repository: ${{ env.REPO_URL }}
+          ref: ${{ env.REPO_BRANCH }}
 
       - name: Initialization environment
         run: |
@@ -85,9 +128,9 @@ jobs:
       - name: Load custom feeds
         run: |
           [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x ${{ github.event.inputs.beforeFeeds }}
+          chmod +x ${{ env.DIY_P1_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P1_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -99,9 +142,9 @@ jobs:
         run: |
           [ -e files ] && mv files openwrt/files
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x ${{ github.event.inputs.afterFeeds }}
+          chmod +x ${{ env.DIY_P2_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.afterFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P2_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -140,14 +183,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadBinDir == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadFirmware == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_FIRMWARE == 'true' }} && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -163,7 +206,7 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: ${{ github.event.inputs.uploadRelease == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
@@ -183,6 +226,42 @@ jobs:
         run: |
           echo "CONFIG_FILE=config/${{ github.job }}.config" >> $GITHUB_ENV
 
+          tempValue=${{ github.event.inputs.repository }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_URL }}" ]]; then
+            echo "REPO_URL=${{ env.REPO_URL }} set value ${{ tempValue }}"
+            echo "REPO_URL=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.ref }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_BRANCH }}" ]]; then
+            echo "REPO_BRANCH=${{ env.REPO_BRANCH }} set value ${{ tempValue }}"
+            echo "REPO_BRANCH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.beforeFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P1_SH }}" ]]; then
+            echo "DIY_P1_SH=${{ env.DIY_P1_SH }} set value ${{ tempValue }}"
+            echo "DIY_P1_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.afterFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P2_SH }}" ]]; then
+            echo "DIY_P2_SH=${{ env.DIY_P2_SH }} set value ${{ tempValue }}"
+            echo "DIY_P2_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadBinDir }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_BIN_DIR }}" ]]; then
+            echo "UPLOAD_BIN_DIR=${{ env.UPLOAD_BIN_DIR }} set value ${{ tempValue }}"
+            echo "UPLOAD_BIN_DIR=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadFirmware }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_FIRMWARE }}" ]]; then
+            echo "UPLOAD_FIRMWARE=${{ env.UPLOAD_FIRMWARE }} set value ${{ tempValue }}"
+            echo "UPLOAD_FIRMWARE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadRelease }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_RELEASE }}" ]]; then
+            echo "UPLOAD_RELEASE=${{ env.UPLOAD_RELEASE }} set value ${{ tempValue }}"
+            echo "UPLOAD_RELEASE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
@@ -198,8 +277,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: openwrt
-          repository: ${{ github.event.inputs.repository }}
-          ref: ${{ github.event.inputs.ref }}
+          repository: ${{ env.REPO_URL }}
+          ref: ${{ env.REPO_BRANCH }}
 
       - name: Initialization environment
         run: |
@@ -212,9 +291,9 @@ jobs:
       - name: Load custom feeds
         run: |
           [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x ${{ github.event.inputs.beforeFeeds }}
+          chmod +x ${{ env.DIY_P1_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P1_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -226,9 +305,9 @@ jobs:
         run: |
           [ -e files ] && mv files openwrt/files
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x ${{ github.event.inputs.afterFeeds }}
+          chmod +x ${{ env.DIY_P2_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.afterFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P2_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -267,14 +346,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadBinDir == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadFirmware == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_FIRMWARE == 'true' }} && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -290,7 +369,7 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: ${{ github.event.inputs.uploadRelease == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
@@ -310,6 +389,42 @@ jobs:
         run: |
           echo "CONFIG_FILE=config/${{ github.job }}.config" >> $GITHUB_ENV
 
+          tempValue=${{ github.event.inputs.repository }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_URL }}" ]]; then
+            echo "REPO_URL=${{ env.REPO_URL }} set value ${{ tempValue }}"
+            echo "REPO_URL=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.ref }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_BRANCH }}" ]]; then
+            echo "REPO_BRANCH=${{ env.REPO_BRANCH }} set value ${{ tempValue }}"
+            echo "REPO_BRANCH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.beforeFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P1_SH }}" ]]; then
+            echo "DIY_P1_SH=${{ env.DIY_P1_SH }} set value ${{ tempValue }}"
+            echo "DIY_P1_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.afterFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P2_SH }}" ]]; then
+            echo "DIY_P2_SH=${{ env.DIY_P2_SH }} set value ${{ tempValue }}"
+            echo "DIY_P2_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadBinDir }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_BIN_DIR }}" ]]; then
+            echo "UPLOAD_BIN_DIR=${{ env.UPLOAD_BIN_DIR }} set value ${{ tempValue }}"
+            echo "UPLOAD_BIN_DIR=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadFirmware }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_FIRMWARE }}" ]]; then
+            echo "UPLOAD_FIRMWARE=${{ env.UPLOAD_FIRMWARE }} set value ${{ tempValue }}"
+            echo "UPLOAD_FIRMWARE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadRelease }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_RELEASE }}" ]]; then
+            echo "UPLOAD_RELEASE=${{ env.UPLOAD_RELEASE }} set value ${{ tempValue }}"
+            echo "UPLOAD_RELEASE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
@@ -325,8 +440,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: openwrt
-          repository: ${{ github.event.inputs.repository }}
-          ref: ${{ github.event.inputs.ref }}
+          repository: ${{ env.REPO_URL }}
+          ref: ${{ env.REPO_BRANCH }}
 
       - name: Initialization environment
         run: |
@@ -339,9 +454,9 @@ jobs:
       - name: Load custom feeds
         run: |
           [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x ${{ github.event.inputs.beforeFeeds }}
+          chmod +x ${{ env.DIY_P1_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P1_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -353,9 +468,9 @@ jobs:
         run: |
           [ -e files ] && mv files openwrt/files
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x ${{ github.event.inputs.afterFeeds }}
+          chmod +x ${{ env.DIY_P2_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.afterFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P2_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -394,27 +509,16 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadBinDir == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
-      - name: Organize files
-        id: organize
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadFirmware == 'true' }} && !cancelled()
-        run: |
-          ls -l
-          cd openwrt/bin/targets/*/*
-          ls -l
-          rm -rf packages
-          echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-          echo "::set-output name=status::success"
-
       - name: Package Armvirt as OpenWrt
         uses: unifreq/openwrt_packit@master
-        if: ${{ steps.organize.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && !cancelled()
         env:
-          OPENWRT_ARMVIRT: ${{ env.FIRMWARE }}/openwrt-armvirt-64-default-rootfs.tar.gz
+          OPENWRT_ARMVIRT_PATH: openwrt/bin/targets/*/*/*.tar.gz
           KERNEL_VERSION_NAME: 5.16.18
           KERNEL_AUTO_LATEST: true
           PACKAGE_SOC: s905d
@@ -428,7 +532,7 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: ${{ github.event.inputs.uploadRelease == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
@@ -448,6 +552,42 @@ jobs:
         run: |
           echo "CONFIG_FILE=config/${{ github.job }}.config" >> $GITHUB_ENV
 
+          tempValue=${{ github.event.inputs.repository }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_URL }}" ]]; then
+            echo "REPO_URL=${{ env.REPO_URL }} set value ${{ tempValue }}"
+            echo "REPO_URL=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.ref }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_BRANCH }}" ]]; then
+            echo "REPO_BRANCH=${{ env.REPO_BRANCH }} set value ${{ tempValue }}"
+            echo "REPO_BRANCH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.beforeFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P1_SH }}" ]]; then
+            echo "DIY_P1_SH=${{ env.DIY_P1_SH }} set value ${{ tempValue }}"
+            echo "DIY_P1_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.afterFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P2_SH }}" ]]; then
+            echo "DIY_P2_SH=${{ env.DIY_P2_SH }} set value ${{ tempValue }}"
+            echo "DIY_P2_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadBinDir }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_BIN_DIR }}" ]]; then
+            echo "UPLOAD_BIN_DIR=${{ env.UPLOAD_BIN_DIR }} set value ${{ tempValue }}"
+            echo "UPLOAD_BIN_DIR=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadFirmware }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_FIRMWARE }}" ]]; then
+            echo "UPLOAD_FIRMWARE=${{ env.UPLOAD_FIRMWARE }} set value ${{ tempValue }}"
+            echo "UPLOAD_FIRMWARE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadRelease }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_RELEASE }}" ]]; then
+            echo "UPLOAD_RELEASE=${{ env.UPLOAD_RELEASE }} set value ${{ tempValue }}"
+            echo "UPLOAD_RELEASE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
@@ -463,8 +603,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: openwrt
-          repository: ${{ github.event.inputs.repository }}
-          ref: ${{ github.event.inputs.ref }}
+          repository: ${{ env.REPO_URL }}
+          ref: ${{ env.REPO_BRANCH }}
 
       - name: Initialization environment
         run: |
@@ -477,9 +617,9 @@ jobs:
       - name: Load custom feeds
         run: |
           [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x ${{ github.event.inputs.beforeFeeds }}
+          chmod +x ${{ env.DIY_P1_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P1_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -491,9 +631,9 @@ jobs:
         run: |
           [ -e files ] && mv files openwrt/files
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x ${{ github.event.inputs.afterFeeds }}
+          chmod +x ${{ env.DIY_P2_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.afterFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P2_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -532,14 +672,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadBinDir == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadFirmware == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_FIRMWARE == 'true' }} && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -555,7 +695,7 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: ${{ github.event.inputs.uploadRelease == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
@@ -575,6 +715,42 @@ jobs:
         run: |
           echo "CONFIG_FILE=config/${{ github.job }}.config" >> $GITHUB_ENV
 
+          tempValue=${{ github.event.inputs.repository }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_URL }}" ]]; then
+            echo "REPO_URL=${{ env.REPO_URL }} set value ${{ tempValue }}"
+            echo "REPO_URL=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.ref }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_BRANCH }}" ]]; then
+            echo "REPO_BRANCH=${{ env.REPO_BRANCH }} set value ${{ tempValue }}"
+            echo "REPO_BRANCH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.beforeFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P1_SH }}" ]]; then
+            echo "DIY_P1_SH=${{ env.DIY_P1_SH }} set value ${{ tempValue }}"
+            echo "DIY_P1_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.afterFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P2_SH }}" ]]; then
+            echo "DIY_P2_SH=${{ env.DIY_P2_SH }} set value ${{ tempValue }}"
+            echo "DIY_P2_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadBinDir }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_BIN_DIR }}" ]]; then
+            echo "UPLOAD_BIN_DIR=${{ env.UPLOAD_BIN_DIR }} set value ${{ tempValue }}"
+            echo "UPLOAD_BIN_DIR=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadFirmware }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_FIRMWARE }}" ]]; then
+            echo "UPLOAD_FIRMWARE=${{ env.UPLOAD_FIRMWARE }} set value ${{ tempValue }}"
+            echo "UPLOAD_FIRMWARE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadRelease }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_RELEASE }}" ]]; then
+            echo "UPLOAD_RELEASE=${{ env.UPLOAD_RELEASE }} set value ${{ tempValue }}"
+            echo "UPLOAD_RELEASE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
@@ -590,8 +766,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: openwrt
-          repository: ${{ github.event.inputs.repository }}
-          ref: ${{ github.event.inputs.ref }}
+          repository: ${{ env.REPO_URL }}
+          ref: ${{ env.REPO_BRANCH }}
 
       - name: Initialization environment
         run: |
@@ -604,9 +780,9 @@ jobs:
       - name: Load custom feeds
         run: |
           [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x ${{ github.event.inputs.beforeFeeds }}
+          chmod +x ${{ env.DIY_P1_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P1_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -618,9 +794,9 @@ jobs:
         run: |
           [ -e files ] && mv files openwrt/files
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x ${{ github.event.inputs.afterFeeds }}
+          chmod +x ${{ env.DIY_P2_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.afterFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P2_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -659,14 +835,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadBinDir == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadFirmware == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_FIRMWARE == 'true' }} && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -682,7 +858,7 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: ${{ github.event.inputs.uploadRelease == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
@@ -702,6 +878,42 @@ jobs:
         run: |
           echo "CONFIG_FILE=config/${{ github.job }}.config" >> $GITHUB_ENV
 
+          tempValue=${{ github.event.inputs.repository }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_URL }}" ]]; then
+            echo "REPO_URL=${{ env.REPO_URL }} set value ${{ tempValue }}"
+            echo "REPO_URL=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.ref }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.REPO_BRANCH }}" ]]; then
+            echo "REPO_BRANCH=${{ env.REPO_BRANCH }} set value ${{ tempValue }}"
+            echo "REPO_BRANCH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.beforeFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P1_SH }}" ]]; then
+            echo "DIY_P1_SH=${{ env.DIY_P1_SH }} set value ${{ tempValue }}"
+            echo "DIY_P1_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.afterFeeds }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.DIY_P2_SH }}" ]]; then
+            echo "DIY_P2_SH=${{ env.DIY_P2_SH }} set value ${{ tempValue }}"
+            echo "DIY_P2_SH=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadBinDir }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_BIN_DIR }}" ]]; then
+            echo "UPLOAD_BIN_DIR=${{ env.UPLOAD_BIN_DIR }} set value ${{ tempValue }}"
+            echo "UPLOAD_BIN_DIR=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadFirmware }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_FIRMWARE }}" ]]; then
+            echo "UPLOAD_FIRMWARE=${{ env.UPLOAD_FIRMWARE }} set value ${{ tempValue }}"
+            echo "UPLOAD_FIRMWARE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+          tempValue=${{ github.event.inputs.uploadRelease }}
+          if [[ -n "${{ tempValue }}" && "${{ tempValue }}" != "${{ env.UPLOAD_RELEASE }}" ]]; then
+            echo "UPLOAD_RELEASE=${{ env.UPLOAD_RELEASE }} set value ${{ tempValue }}"
+            echo "UPLOAD_RELEASE=${{ tempValue }}" >> $GITHUB_ENV
+          fi
+
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
@@ -717,8 +929,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: openwrt
-          repository: ${{ github.event.inputs.repository }}
-          ref: ${{ github.event.inputs.ref }}
+          repository: ${{ env.REPO_URL }}
+          ref: ${{ env.REPO_BRANCH }}
 
       - name: Initialization environment
         run: |
@@ -731,9 +943,9 @@ jobs:
       - name: Load custom feeds
         run: |
           [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-          chmod +x ${{ github.event.inputs.beforeFeeds }}
+          chmod +x ${{ env.DIY_P1_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.beforeFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P1_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -745,9 +957,9 @@ jobs:
         run: |
           [ -e files ] && mv files openwrt/files
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x ${{ github.event.inputs.afterFeeds }}
+          chmod +x ${{ env.DIY_P2_SH }}
           cd openwrt
-          $GITHUB_WORKSPACE/${{ github.event.inputs.afterFeeds }}
+          $GITHUB_WORKSPACE/${{ env.DIY_P2_SH }}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
@@ -786,14 +998,14 @@ jobs:
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadBinDir == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ github.event.inputs.uploadFirmware == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_FIRMWARE == 'true' }} && !cancelled()
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -809,7 +1021,7 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: ${{ github.event.inputs.uploadRelease == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
