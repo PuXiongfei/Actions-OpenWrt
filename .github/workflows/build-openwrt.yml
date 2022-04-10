@@ -178,19 +178,19 @@ jobs:
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
       - name: Check space usage
-        if: (!cancelled())
+        if: ${{ !cancelled() }}
         run: df -hT
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled() }}
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_FIRMWARE == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled() }}
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -199,21 +199,21 @@ jobs:
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.organize.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.organize.outputs.status == 'success' && !cancelled() }}
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Generate release tag
         id: tag
-        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' && !cancelled() }}
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
 
       - name: Upload firmware to release
         uses: softprops/action-gh-release@v1
-        if: ${{ steps.tag.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.tag.outputs.status == 'success' && !cancelled() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -341,19 +341,19 @@ jobs:
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
       - name: Check space usage
-        if: (!cancelled())
+        if: ${{ !cancelled() }}
         run: df -hT
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled() }}
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_FIRMWARE == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled() }}
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -362,21 +362,21 @@ jobs:
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.organize.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.organize.outputs.status == 'success' && !cancelled() }}
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Generate release tag
         id: tag
-        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' && !cancelled() }}
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
 
       - name: Upload firmware to release
         uses: softprops/action-gh-release@v1
-        if: ${{ steps.tag.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.tag.outputs.status == 'success' && !cancelled() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -504,19 +504,19 @@ jobs:
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
       - name: Check space usage
-        if: (!cancelled())
+        if: ${{ !cancelled() }}
         run: df -hT
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled() }}
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Package Armvirt as OpenWrt
         uses: unifreq/openwrt_packit@master
-        if: ${{ steps.compile.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled() }}
         env:
           OPENWRT_ARMVIRT: openwrt/bin/targets/*/*/*.tar.gz
           KERNEL_VERSION_NAME: 5.16.18
@@ -525,21 +525,21 @@ jobs:
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@v2
-        if: ${{ env.PACKAGED_STATUS == 'success' }} && !cancelled()
+        if: ${{ env.PACKAGED_STATUS == 'success' && !cancelled() }}
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.PACKAGED_OUTPUTPATH }}
 
       - name: Generate release tag
         id: tag
-        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' && !cancelled() }}
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
 
       - name: Upload firmware to release
         uses: softprops/action-gh-release@v1
-        if: ${{ steps.tag.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.tag.outputs.status == 'success' && !cancelled() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -667,19 +667,19 @@ jobs:
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
       - name: Check space usage
-        if: (!cancelled())
+        if: ${{ !cancelled() }}
         run: df -hT
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled() }}
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_FIRMWARE == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled() }}
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -688,21 +688,21 @@ jobs:
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.organize.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.organize.outputs.status == 'success' && !cancelled() }}
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Generate release tag
         id: tag
-        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' && !cancelled() }}
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
 
       - name: Upload firmware to release
         uses: softprops/action-gh-release@v1
-        if: ${{ steps.tag.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.tag.outputs.status == 'success' && !cancelled() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -830,19 +830,19 @@ jobs:
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
       - name: Check space usage
-        if: (!cancelled())
+        if: ${{ !cancelled() }}
         run: df -hT
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled() }}
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_FIRMWARE == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled() }}
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -851,21 +851,21 @@ jobs:
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.organize.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.organize.outputs.status == 'success' && !cancelled() }}
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Generate release tag
         id: tag
-        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' && !cancelled() }}
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
 
       - name: Upload firmware to release
         uses: softprops/action-gh-release@v1
-        if: ${{ steps.tag.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.tag.outputs.status == 'success' && !cancelled() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -993,19 +993,19 @@ jobs:
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
       - name: Check space usage
-        if: (!cancelled())
+        if: ${{ !cancelled() }}
         run: df -hT
 
       - name: Upload bin directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_BIN_DIR == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled() }}
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
 
       - name: Organize files
         id: organize
-        if: ${{ steps.compile.outputs.status == 'success' }} && ${{ env.UPLOAD_FIRMWARE == 'true' }} && !cancelled()
+        if: ${{ steps.compile.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled() }}
         run: |
           cd openwrt/bin/targets/*/*
           rm -rf packages
@@ -1014,21 +1014,21 @@ jobs:
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@v2
-        if: ${{ steps.organize.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.organize.outputs.status == 'success' && !cancelled() }}
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Generate release tag
         id: tag
-        if: ${{ env.UPLOAD_RELEASE == 'true' }} && !cancelled()
+        if: ${{ env.UPLOAD_RELEASE == 'true' && !cancelled() }}
         run: |
           echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
 
       - name: Upload firmware to release
         uses: softprops/action-gh-release@v1
-        if: ${{ steps.tag.outputs.status == 'success' }} && !cancelled()
+        if: ${{ steps.tag.outputs.status == 'success' && !cancelled() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
