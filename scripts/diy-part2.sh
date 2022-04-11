@@ -101,6 +101,8 @@ if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g}' target/linux/ramips/image/mt7621.mk
     sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
+    echo "修改.config"
+    echo "CONFIG_TESTING_KERNEL=y" >>.config
 fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     echo "删除lean/k3screenctrl"
@@ -164,7 +166,8 @@ if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
     sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
-
+    echo "修改.config"
+    echo "CONFIG_TESTING_KERNEL=y" >>.config
     if [ -e $GITHUB_WORKSPACE/config/R3G_switch.patch ]; then
         echo "显示R3G_switch.patch"
         cat $GITHUB_WORKSPACE/config/R3G_switch.patch
@@ -193,6 +196,8 @@ if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
     sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
     sed -i '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/{/DEVICE_PACKAGES/s/$/& luci-app-zerotier tailscale/}' target/linux/ramips/image/mt7620.mk
     sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
+    echo "修改.config"
+    echo "CONFIG_TESTING_KERNEL=y" >>.config
 fi
 
 echo "查看package/custom"
