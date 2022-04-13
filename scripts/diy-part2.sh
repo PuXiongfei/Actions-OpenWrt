@@ -133,11 +133,10 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     echo "增加ophub/luci-app-amlogic"
     git clone --depth 1 https://github.com/ophub/luci-app-amlogic package/custom/luci-app-amlogic
-
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/DEFAULT_PACKAGES/p' target/linux/armvirt/Makefile
     sed -i 's/DEFAULT_PACKAGES.*/DEFAULT_PACKAGES +=/' target/linux/armvirt/Makefile
-    sed -i '/DEFAULT_PACKAGES/s/$/& perl-http-date perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8/' target/linux/armvirt/Makefile
+    sed -i '/DEFAULT_PACKAGES/s/$/& perl perl-http-date perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& blkid fdisk lsblk parted/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& attr btrfs-progs chattr dosfstools e2fsprogs f2fs-tools f2fsck lsattr mkf2fs xfs-fsck xfs-mkfs/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& bsdtar pigz/' target/linux/armvirt/Makefile
@@ -185,7 +184,6 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     sed -i '/DEFAULT_PACKAGES/,/BuildTarget/{s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-wireguard//g;s/luci-app-xlnetacc//g}' target/linux/x86/Makefile
     sed -i '/DEFAULT_PACKAGES/a\docker-compose luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone tailscale \\' target/linux/x86/Makefile
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
-
     echo "修改GRUB_TITLE"
     sed -n '/GRUB_TITLE$/,/help$/p' config/Config-images.in
     sed -i "/GRUB_TITLE$/,/help$/{s|\"OpenWrt\"|\"OpenWrt PuXiongfei build $(date "+%Y.%m.%d")\"|}" config/Config-images.in
