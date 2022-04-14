@@ -86,9 +86,6 @@ cat package/custom/openwrt-passwall/luci/luci-app-passwall/Makefile
 echo "增加vernesong/luci-app-openclash"
 git clone --depth 1 https://github.com/vernesong/OpenClash package/custom/OpenClash
 
-echo "增加Lienol/openwrt-package/luci-app-socat"
-git clone --depth 1 https://github.com/Lienol/openwrt-package Lienol/openwrt-package && cp -af Lienol/openwrt-package/luci-app-socat package/custom
-
 echo "修改DEFAULT_PACKAGES"
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 sed -i '/DEFAULT_PACKAGES.router/,/^ifneq/{s/luci-app-autoreboot//g;s/luci-app-ssr-plus//g;s/luci-app-unblockmusic//g;s/luci-app-ramfree//g;s/luci-app-accesscontrol//g}' include/target.mk
@@ -152,6 +149,7 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     echo "# CONFIG_BRCMFMAC_USB is not set" >>.config
     echo "# CONFIG_BRCMFMAC_PCIE is not set" >>.config
     echo "CONFIG_BTRFS_PROGS_ZSTD=y" >>.config
+    echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_OFFLOADING=y" >>.config
     echo "# CONFIG_TARGET_ROOTFS_INITRAMFS is not set" >>.config
     echo "# CONFIG_TARGET_ROOTFS_CPIOGZ is not set" >>.config
     echo "# CONFIG_TARGET_ROOTFS_EXT4FS is not set" >>.config
