@@ -150,6 +150,7 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     echo "# CONFIG_BRCMFMAC_PCIE is not set" >>.config
     echo "CONFIG_BTRFS_PROGS_ZSTD=y" >>.config
     echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_OFFLOADING=y" >>.config
+    echo "# CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE is not set" >>.config
     echo "# CONFIG_TARGET_ROOTFS_INITRAMFS is not set" >>.config
     echo "# CONFIG_TARGET_ROOTFS_CPIOGZ is not set" >>.config
     echo "# CONFIG_TARGET_ROOTFS_EXT4FS is not set" >>.config
