@@ -177,7 +177,7 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     echo "修改target/linux/x86/Makefile"
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
     sed -i '/DEFAULT_PACKAGES/,/BuildTarget/{s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-wireguard//g;s/luci-app-xlnetacc//g}' target/linux/x86/Makefile
-    sed -i '/DEFAULT_PACKAGES/a\docker-compose luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone tailscale \\' target/linux/x86/Makefile
+    sed -i '/DEFAULT_PACKAGES/a\docker-compose ibt-firmware iwlwifi-firmware-ax200 iwlwifi-firmware-ax210 luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone tailscale \\' target/linux/x86/Makefile
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
     echo "修改GRUB_TITLE"
     sed -n '/GRUB_TITLE$/,/help$/p' config/Config-images.in
