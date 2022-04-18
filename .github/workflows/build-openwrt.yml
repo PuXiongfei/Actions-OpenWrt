@@ -49,11 +49,11 @@ on:
       uploadFirmware:
         description: "upload firmware"
         required: true
-        default: "false"
+        default: "true"
       uploadRelease:
         description: "upload release"
         required: true
-        default: "true"
+        default: "false"
 
 jobs:
   D2:
