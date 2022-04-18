@@ -96,7 +96,7 @@ if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
     sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g}' target/linux/ramips/image/mt7621.mk
-    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/golang luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
+    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
 fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
@@ -116,7 +116,7 @@ if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     md5sum package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
-    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm golang luci-app-adguardhome luci-app-aria2 luci-app-k3screenctrl luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/}' target/linux/bcm53xx/image/Makefile
+    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-adguardhome luci-app-aria2 luci-app-k3screenctrl luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/}' target/linux/bcm53xx/image/Makefile
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
     echo "修改Makefile只编译K3"
     sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
@@ -141,7 +141,7 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     sed -i '/DEFAULT_PACKAGES/s/$/& wpa-cli wpad-openssl/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& iw/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& kmod-usb-hid kmod-mmc usbutils pciutils kmod-usb-audio kmod-usb-net kmod-usb-net-asix-ax88179 kmod-usb-net-rtl8150 kmod-usb-net-rtl8152-vendor kmod-sound-core kmod-bluetooth bluez-utils bluez-utils-extra bluez-daemon alsa-utils/' target/linux/armvirt/Makefile
-    sed -i '/DEFAULT_PACKAGES/s/$/& docker-compose golang luci-app-adguardhome luci-app-amlogic luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/' target/linux/armvirt/Makefile
+    sed -i '/DEFAULT_PACKAGES/s/$/& docker-compose luci-app-adguardhome luci-app-amlogic luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/' target/linux/armvirt/Makefile
     sed -n '/DEFAULT_PACKAGES/p' target/linux/armvirt/Makefile
     echo "修改.config"
     echo "CONFIG_TESTING_KERNEL=y" >>.config
@@ -160,7 +160,7 @@ fi
 if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
-    sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/golang luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
+    sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
     if [ -e $GITHUB_WORKSPACE/config/R3G_switch.patch ]; then
         echo "显示R3G_switch.patch"
