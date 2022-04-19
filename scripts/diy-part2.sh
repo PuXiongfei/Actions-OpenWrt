@@ -183,6 +183,8 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     sed -n '/GRUB_TITLE$/,/help$/p' config/Config-images.in
     sed -i "/GRUB_TITLE$/,/help$/{s|\"OpenWrt\"|\"OpenWrt PuXiongfei build $(date "+%Y.%m.%d")\"|}" config/Config-images.in
     sed -n '/GRUB_TITLE$/,/help$/p' config/Config-images.in
+    echo "修改.config"
+    echo "CONFIG_TARGET_ROOTFS_TARGZ=y" >>.config
 fi
 if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
