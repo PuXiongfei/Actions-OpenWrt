@@ -139,7 +139,6 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     sed -i '/DEFAULT_PACKAGES/s/$/& gawk getopt losetup tar uuidgen/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& kmod-brcmfmac kmod-brcmutil kmod-cfg80211 kmod-mac80211/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& wpa-cli wpad-openssl/' target/linux/armvirt/Makefile
-    sed -i '/DEFAULT_PACKAGES/s/$/& iw/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& kmod-usb-hid kmod-mmc usbutils pciutils kmod-usb-audio kmod-usb-net kmod-usb-net-asix-ax88179 kmod-usb-net-rtl8150 kmod-usb-net-rtl8152-vendor kmod-sound-core kmod-bluetooth bluez-utils bluez-utils-extra bluez-daemon alsa-utils/' target/linux/armvirt/Makefile
     sed -i '/DEFAULT_PACKAGES/s/$/& docker-compose luci-app-adguardhome luci-app-amlogic luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/' target/linux/armvirt/Makefile
     sed -n '/DEFAULT_PACKAGES/p' target/linux/armvirt/Makefile
@@ -177,7 +176,7 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     echo "修改target/linux/x86/Makefile"
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
     sed -i '/DEFAULT_PACKAGES/,/BuildTarget/{s/luci-app-adbyby-plus//g;s/luci-app-unblockmusic//g;s/luci-app-wireguard//g;s/luci-app-xlnetacc//g}' target/linux/x86/Makefile
-    sed -i '/DEFAULT_PACKAGES/a\docker-compose ibt-firmware iwlwifi-firmware-ax200 iwlwifi-firmware-ax210 luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone tailscale \\' target/linux/x86/Makefile
+    sed -i '/DEFAULT_PACKAGES/a\bash docker-compose ibt-firmware iwlwifi-firmware-ax200 iwlwifi-firmware-ax210 kmod-cfg80211 kmod-mac80211 luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone tailscale wpad-openssl \\' target/linux/x86/Makefile
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
     echo "修改GRUB_TITLE"
     sed -n '/GRUB_TITLE$/,/help$/p' config/Config-images.in
