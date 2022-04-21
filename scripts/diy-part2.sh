@@ -98,27 +98,28 @@ if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
     sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g}' target/linux/ramips/image/mt7621.mk
     sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
-    echo "修改.config"
-    echo "CONFIG_TESTING_KERNEL=y" >>.config
 fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
-    echo "删除lean/k3screenctrl"
-    rm -rf package/lean/k3screenctrl
+    mkdir -p package/custom/brcmfmac4366c
     echo "增加lwz322/luci-app-k3screenctrl"
     git clone --depth 1 https://github.com/lwz322/luci-app-k3screenctrl package/custom/luci-app-k3screenctrl
     echo "增加lwz322/k3screenctrl_build"
     git clone --depth 1 https://github.com/lwz322/k3screenctrl_build package/custom/k3screenctrl_build
-    echo "复制config/K3/patches"
-    cp -af $GITHUB_WORKSPACE/config/K3/patches package/custom/k3screenctrl_build/
-    echo "显示000-fix-k3screen.patch"
-    cat package/custom/k3screenctrl_build/patches/000-fix-k3screen.patch
+    echo "复制000-fix-k3screen.patch"
+    cp -af package/lean/k3screenctrl/patches package/custom/k3screenctrl_build/
+    ls -la package/custom/k3screenctrl_build/patches
+    echo "获取brcmfmac4366c-pcie.bin"
+    BIN_PATH=$(curl -s https://api.github.com/repos/PuXiongfei/brcmfmac4366c/releases/latest | grep browser_download_url | cut -d '"' -f 4)
+    wget -O package/custom/brcmfmac4366c/brcmfmac4366c-pcie.bin ${BIN_PATH}
+    md5sum package/custom/brcmfmac4366c/brcmfmac4366c-pcie.bin
+    echo "删除lean/k3screenctrl"
+    rm -rf package/lean/k3screenctrl
     echo "替换brcmfmac4366c-pcie.bin"
-    md5sum $GITHUB_WORKSPACE/config/K3/3.0.0.4.386.46065_brcmfmac4366c-pcie.bin
-    cp -af $GITHUB_WORKSPACE/config/K3/3.0.0.4.386.46065_brcmfmac4366c-pcie.bin package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
+    cp -af package/custom/brcmfmac4366c/brcmfmac4366c-pcie.bin package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     md5sum package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
-    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-adguardhome luci-app-aria2 luci-app-k3screenctrl luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/}' target/linux/bcm53xx/image/Makefile
+    sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm docker-compose luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-k3screenctrl luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale/}' target/linux/bcm53xx/image/Makefile
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
     echo "修改Makefile只编译K3"
     sed -i 's|^TARGET_|# TARGET_|g; s|# TARGET_DEVICES += phicomm_k3|TARGET_DEVICES += phicomm_k3|' target/linux/bcm53xx/image/Makefile
@@ -163,8 +164,6 @@ if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
     sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
     sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
-    echo "修改.config"
-    echo "CONFIG_TESTING_KERNEL=y" >>.config
     if [ -e $GITHUB_WORKSPACE/config/R3G_switch.patch ]; then
         echo "显示R3G_switch.patch"
         cat $GITHUB_WORKSPACE/config/R3G_switch.patch
@@ -194,8 +193,6 @@ if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
     sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
     sed -i '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/{/DEVICE_PACKAGES/s/$/& luci-app-zerotier tailscale/}' target/linux/ramips/image/mt7620.mk
     sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
-    echo "修改.config"
-    echo "CONFIG_TESTING_KERNEL=y" >>.config
 fi
 
 echo "查看package/custom"
