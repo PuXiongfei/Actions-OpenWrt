@@ -183,9 +183,10 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     sed -i '/DEFAULT_PACKAGES/a\ibt-firmware iwlwifi-firmware-ax200 iwlwifi-firmware-ax210 kmod-cfg80211 kmod-iwlwifi kmod-mac80211 wpad-openssl \\' target/linux/x86/Makefile
     sed -i '/DEFAULT_PACKAGES/a\luci-app-adguardhome luci-app-aria2 luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone tailscale \\' target/linux/x86/Makefile
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
-    echo "修改GRUB_TITLE"
+    echo "修改.config"
     echo "CONFIG_GRUB_TITLE=\"OpenWrt PuXiongfei build $(date "+%Y.%m.%d")\"" >>.config
     echo "CONFIG_PACKAGE_IWLWIFI_DEBUG=y" >>.config
+    cat .config
 fi
 if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
