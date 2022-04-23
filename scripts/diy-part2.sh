@@ -179,14 +179,14 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     echo "修改target/linux/x86/Makefile"
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
     sed -i '/DEFAULT_PACKAGES/,/BuildTarget/{s/luci-app-adbyby-plus//g;s/luci-app-ipsec-vpnd//g;s/luci-app-unblockmusic//g;s/luci-app-xlnetacc//g;s/luci-app-wireguard//g}' target/linux/x86/Makefile
-    sed -i '/DEFAULT_PACKAGES/a\bash docker-compose ibt-firmware iwlwifi-firmware-ax200 iwlwifi-firmware-ax210 kmod-cfg80211 kmod-iwlwifi kmod-mac80211 luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone tailscale wpad-openssl \\' target/linux/x86/Makefile
+    sed -i '/DEFAULT_PACKAGES/a\bash blkid fdisk lsblk parted \\' target/linux/x86/Makefile
+    sed -i '/DEFAULT_PACKAGES/a\ibt-firmware iwlwifi-firmware-ax200 iwlwifi-firmware-ax210 kmod-cfg80211 kmod-iwlwifi kmod-mac80211 wpad-openssl \\' target/linux/x86/Makefile
+    sed -i '/DEFAULT_PACKAGES/a\docker-compose luci-app-adguardhome luci-app-aria2 luci-app-dockerman luci-app-netdata luci-app-openclash luci-app-passwall luci-app-rclone tailscale \\' target/linux/x86/Makefile
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
     echo "修改GRUB_TITLE"
     sed -n '/GRUB_TITLE$/,/help$/p' config/Config-images.in
     sed -i "/GRUB_TITLE$/,/help$/{s|\"OpenWrt\"|\"OpenWrt PuXiongfei build $(date "+%Y.%m.%d")\"|}" config/Config-images.in
     sed -n '/GRUB_TITLE$/,/help$/p' config/Config-images.in
-    echo "修改.config"
-    echo "CONFIG_TARGET_ROOTFS_TARGZ=y" >>.config
 fi
 if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
