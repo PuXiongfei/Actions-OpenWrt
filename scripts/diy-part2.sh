@@ -185,7 +185,6 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
     echo "修改.config"
     echo "CONFIG_GRUB_TITLE=\"OpenWrt PuXiongfei build $(date "+%Y.%m.%d")\"" >>.config
-    echo "CONFIG_PACKAGE_IWLWIFI_DEBUG=y" >>.config
     cat .config
 fi
 if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
