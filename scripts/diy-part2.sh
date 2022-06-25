@@ -92,13 +92,6 @@ sed -i '/DEFAULT_PACKAGES.router/,/^ifneq/{s/luci-app-autoreboot//g;s/luci-app-s
 sed -i '/DEFAULT_PACKAGES.router/a\\tautomount autosamba ddns-scripts_cloudflare.com-v4 iperf3 ipv6helper luci-app-argon-config luci-app-socat luci-app-ttyd luci-app-webadmin nano \\' include/target.mk
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 
-if [ "$CONFIG_FILE_DEVICE" = "D2" ]; then
-    echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
-    sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
-    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/kmod-mt7603e/kmod-mt7603/g;s/kmod-mt76x2e/kmod-mt76x2/g;s/luci-app-mtwifi//g;s/-wpad-openssl//g}' target/linux/ramips/image/mt7621.mk
-    sed -i '/d-team_newifi-d2$/,/d-team_newifi-d2$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
-    sed -n '/d-team_newifi-d2$/,/d-team_newifi-d2$/p' target/linux/ramips/image/mt7621.mk
-fi
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
     mkdir -p package/custom/brcmfmac4366c
     echo "增加lwz322/luci-app-k3screenctrl"
@@ -159,22 +152,6 @@ if [ "$CONFIG_FILE_DEVICE" = "N1" ]; then
     echo "# CONFIG_TARGET_ROOTFS_SQUASHFS is not set" >>.config
     cat .config
 fi
-if [ "$CONFIG_FILE_DEVICE" = "R3G" ]; then
-    echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
-    sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
-    sed -i '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/{s/\\/luci-app-adguardhome luci-app-aria2 luci-app-openclash luci-app-passwall luci-app-rclone luci-app-zerotier tailscale \\/}' target/linux/ramips/image/mt7621.mk
-    sed -n '/xiaomi_mi-router-3g$/,/xiaomi_mi-router-3g$/p' target/linux/ramips/image/mt7621.mk
-    if [ -e $GITHUB_WORKSPACE/config/R3G_switch.patch ]; then
-        echo "显示R3G_switch.patch"
-        cat $GITHUB_WORKSPACE/config/R3G_switch.patch
-        echo "应用R3G_switch.patch"
-        git apply $GITHUB_WORKSPACE/config/R3G_switch.patch
-        echo "显示mt7621_xiaomi_mi-router-3g.dts"
-        cat target/linux/ramips/dts/mt7621_xiaomi_mi-router-3g.dts
-        echo "显示02_network"
-        cat target/linux/ramips/mt7621/base-files/etc/board.d/02_network
-    fi
-fi
 if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     echo "修改target/linux/x86/Makefile"
     sed -n '/DEFAULT_PACKAGES/,/BuildTarget/p' target/linux/x86/Makefile
@@ -186,12 +163,6 @@ if [ "$CONFIG_FILE_DEVICE" = "R86S" ]; then
     echo "修改.config"
     echo "CONFIG_GRUB_TITLE=\"OpenWrt PuXiongfei build $(date "+%Y.%m.%d")\"" >>.config
     cat .config
-fi
-if [ "$CONFIG_FILE_DEVICE" = "Y1" ]; then
-    echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
-    sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
-    sed -i '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/{/DEVICE_PACKAGES/s/$/& luci-app-zerotier tailscale/}' target/linux/ramips/image/mt7620.mk
-    sed -n '/lenovo_newifi-y1$/,/lenovo_newifi-y1$/p' target/linux/ramips/image/mt7620.mk
 fi
 
 echo "查看package/custom"
