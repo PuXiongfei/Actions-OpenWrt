@@ -122,8 +122,9 @@ jobs:
           echo "Free space:"
           df -hT
           sudo timedatectl set-timezone "$TZ"
-          sudo -E apt-get -qq update
-          sudo -E apt-get -qq install $(cat config/depends-ubuntu.config)
+          sudo -E apt update -y
+          sudo -E apt full-upgrade -y
+          sudo -E apt install -y $(cat config/depends-ubuntu.config)
 
       - name: Load custom feeds
         run: |
@@ -284,8 +285,9 @@ jobs:
           echo "Free space:"
           df -hT
           sudo timedatectl set-timezone "$TZ"
-          sudo -E apt-get -qq update
-          sudo -E apt-get -qq install $(cat config/depends-ubuntu.config)
+          sudo -E apt update -y
+          sudo -E apt full-upgrade -y
+          sudo -E apt install -y $(cat config/depends-ubuntu.config)
 
       - name: Load custom feeds
         run: |
