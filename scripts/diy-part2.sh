@@ -66,23 +66,15 @@ sed -i '/DEFAULT_PACKAGES.router/a\\tautomount autosamba ddns-scripts_cloudflare
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
-    mkdir -p package/custom/brcmfmac4366c
-    echo "增加Hill-98/luci-app-k3screenctrl"
-    git clone --depth 1 https://github.com/Hill-98/luci-app-k3screenctrl.git package/custom/luci-app-k3screenctrl
-    echo "增加Hill-98/openwrt-k3screenctrl"
-    git clone --depth 1 https://github.com/Hill-98/openwrt-k3screenctrl.git package/custom/openwrt-k3screenctrl
+    echo "增加lwz322/luci-app-k3screenctrl"
+    git clone --depth 1 https://github.com/lwz322/luci-app-k3screenctrl.git package/custom/luci-app-k3screenctrl
+    echo "增加lwz322/k3screenctrl_build"
+    git clone --depth 1 https://github.com/lwz322/k3screenctrl_build.git package/custom/k3screenctrl_build
     echo "复制000-fix-k3screen.patch"
-    \cp -af package/lean/k3screenctrl/patches package/custom/openwrt-k3screenctrl/
-    ls -la package/custom/openwrt-k3screenctrl/patches
+    \cp -af package/lean/k3screenctrl/patches package/custom/k3screenctrl_build/
+    ls -la package/custom/k3screenctrl_build/patches
     echo "删除lean/k3screenctrl"
     rm -rf package/lean/k3screenctrl
-    echo "获取brcmfmac4366c-pcie.bin"
-    BIN_PATH=$(curl -s https://api.github.com/repos/PuXiongfei/brcmfmac4366c/releases/latest | grep browser_download_url | cut -d '"' -f 4)
-    wget -O package/custom/brcmfmac4366c/brcmfmac4366c-pcie.bin ${BIN_PATH}
-    md5sum package/custom/brcmfmac4366c/brcmfmac4366c-pcie.bin
-    echo "替换brcmfmac4366c-pcie.bin"
-    \cp -af package/custom/brcmfmac4366c/brcmfmac4366c-pcie.bin package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
-    md5sum package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     echo "修改$CONFIG_FILE_DEVICE的DEVICE_PACKAGES"
     sed -n '/phicomm_k3$/,/phicomm_k3$/p' target/linux/bcm53xx/image/Makefile
     sed -i '/phicomm_k3$/,/phicomm_k3$/{/DEVICE_PACKAGES/s/$/& autocore-arm luci-app-aria2 luci-app-dockerman luci-app-k3screenctrl luci-app-openclash luci-app-rclone luci-app-zerotier tailscale/}' target/linux/bcm53xx/image/Makefile
