@@ -66,6 +66,14 @@ sed -i '/DEFAULT_PACKAGES.router/a\\tautomount autosamba ddns-scripts_cloudflare
 sed -n '/DEFAULT_PACKAGES.router/,/^ifneq/p' include/target.mk
 
 if [ "$CONFIG_FILE_DEVICE" = "K3" ]; then
+    echo "获取brcmfmac4366c-pcie.bin"
+    mkdir -p package/custom/brcmfmac4366c
+    BIN_PATH=$(curl -s https://api.github.com/repos/PuXiongfei/brcmfmac4366c/releases/latest | grep browser_download_url | cut -d '"' -f 4)
+    wget -O package/custom/brcmfmac4366c/brcmfmac4366c-pcie.bin ${BIN_PATH}
+    md5sum package/custom/brcmfmac4366c/brcmfmac4366c-pcie.bin
+    echo "替换brcmfmac4366c-pcie.bin"
+    \cp -af package/custom/brcmfmac4366c/brcmfmac4366c-pcie.bin package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
+    md5sum package/lean/k3-brcmfmac4366c-firmware/files/lib/firmware/brcm/brcmfmac4366c-pcie.bin
     echo "增加lwz322/luci-app-k3screenctrl"
     git clone --depth 1 https://github.com/lwz322/luci-app-k3screenctrl.git package/custom/luci-app-k3screenctrl
     echo "增加lwz322/k3screenctrl_build"
